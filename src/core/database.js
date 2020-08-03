@@ -36,10 +36,26 @@ module.exports = class extends require('./storage.js'){
         
         const normalizeKey = this.stringNormalize(trackingKey);
 
-        data.documentID = hash.sha256().update(normalizeKey).digest('hex');
+        const documentId = hash.sha256().update(normalizeKey).digest('hex');
         
-        console.log(data);
+        if(!this.findById(documentId))
+        {
+            this.db.Documents[documentId] = data;
+            this.updateDocumentCount();
+            this.saveStorage();
+        }
 
+    }
+
+    updateDocumentCount()
+    {
+        this.db.Informations.documentCount +=1;
+    }
+
+    findById(id)
+    {
+        if(this.db.Documents[id] != undefined) return true;
+        else return false;
     }
 
     stringNormalize(string)
@@ -53,22 +69,5 @@ module.exports = class extends require('./storage.js'){
         .replace(/ö/gi,'o')
         .replace(/ç/gi,'c')
         .replace(/ /gi,'-');
-    }
-
-
-
-    IndexStandart(string)
-    {
-        return string.toLowerCase()
-            .replace(/www./gi,"")
-            .replace(/ğ/gi,'g')
-            .replace(/ü/gi,'u')
-            .replace(/ş/gi,'s')
-            .replace(/ı/gi,'i')
-            .replace(/ö/gi,'o')
-            .replace(/ç/gi,'c')
-            .replace(/(^\w+:|^)\/\//gi,'')
-            .replace(/\s\s+/gi,' ')
-            .replace(/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/gi,' ');
     }
 }

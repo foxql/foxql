@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>Push Document</title>
+    </head>
+    <body>
+        <script src="../../client.js"></script>
+        <script>
+
+            window.foxQL.pushData({
+                document : {
+                    title : "Test başlığı",
+                    content : "Test içeriği!"
+                },
+                type : "document",
+                primaryKeyMap : ['document', 'title']
+            });
+
+        </script>
+    </body>
+</html>
