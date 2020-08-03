@@ -21,21 +21,4 @@ network.loadEvents([
 });
 
 
-network.pushData({
-    document : {
-        title : "Test başlığı",
-        content : "Test içeriği!"
-    },
-    type : "document",
-    primaryKeyMap : ['document', 'title']
-});
-
-
-$("button").click(()=>{
-  network.push({
-    listener : "message",
-    data : {
-      name : $("input").val()
-    }
-  });
-});
+window.foxQL = network;
