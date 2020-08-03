@@ -1,0 +1,17 @@
+{
+  "name": "foxql-client",
+  "version": "1.0.0",
+  "description": "peer to peer search engine running in your browser.",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "author": "Bora Erdinç Özer",
+  "license": "ISC",
+  "dependencies": {
+    "hash.js": "^1.1.7",
+    "simple-peer": "^9.6.2",
+    "socket.io-client": "^2.3.0",
+    "socket.io-p2p": "^2.2.0"
+  }
+}
