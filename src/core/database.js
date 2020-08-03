@@ -43,6 +43,7 @@ module.exports = class extends require('./storage.js'){
             this.db.Documents[documentId] = data;
             this.updateDocumentCount();
             this.saveStorage();
+            
         }
 
     }
