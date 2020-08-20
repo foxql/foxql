@@ -90,6 +90,19 @@ module.exports = class extends require('./storage.js'){
         return this.indexs.documentStore.docs[ref] || false;
     }   
 
+    search(params)
+    {
+        let refs = this.indexs.search(params);
+        
+        let docs = [];
+        refs.map( ref => {
+            const doc = this.findByRef(ref.ref);
+            if(doc) return docs.push(doc);
+        })
+
+        return docs;
+    }
+
     stringNormalize(string)
     {
         return string.toLowerCase().trim().
