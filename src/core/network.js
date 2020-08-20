@@ -8,8 +8,8 @@ const events = {
 
 module.exports = class extends require("./database.js"){
 
-    constructor({storageName = "foxql-storage", ...rest}){
-        super(storageName)
+    constructor({database, ...rest}){
+        super(database)
         this.options = rest;
         this.socket = null;
         this.p2p = null;

@@ -2,35 +2,28 @@ const storageTemplate = require('../models/empty-storage.js')
 
 module.exports = class {
 
-    constructor(storageName)
-    {
-        this.name = storageName;
-        
-        const storage = this.findStorage()
-        if(!storage) this.emptyStorage()
-        if(storage) this.readStorage(storage)
+    constructor(storageName) {
+        this.storageName = storageName;
     }
 
 
     findStorage()
     {
-        return localStorage.getItem(this.name) || false
+        return localStorage.getItem(this.storageName) || false
     }
 
-    emptyStorage()
+
+    readStorage()
     {
-        this.db = require('../models/empty-storage.js')
-        this.saveStorage();
+        return JSON.parse(
+            this.findStorage()
+        );
     }
 
-    readStorage(storage)
+    saveStorage(dump)
     {
-        this.db = JSON.parse(storage);
-    }
-
-    saveStorage()
-    {
-        const parseObject = JSON.stringify(this.db);
-        localStorage.setItem(this.name, parseObject);
+        localStorage.setItem(this.storageName, 
+            JSON.stringify(dump)    
+        );
     }
 }

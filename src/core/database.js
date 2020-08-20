@@ -1,63 +1,94 @@
 const validator = require('./validator.js');
 const hash = require('hash.js');
+const elasticlunr = require('elasticlunr');
+const validatorEnums = require('../enums/validator-enum.js');
+const databaseEnums = require('../enums/database-enum.js');
 
 const models = {
-    document : require('../models/sample-document.js')
+    entry : require('../models/entry-document.js')
 };
 
 
 module.exports = class extends require('./storage.js'){
-    constructor(storageName)
+    constructor({storageName, fields, ref, saveInterval})
     {
         super(storageName)
-    }
 
-    pushData({type, ...data})
-    {   
-        if(type == undefined) return false
+        const existDump = this.findStorage();
+        if(existDump){
+            this.indexs = elasticlunr.Index.load(
+                this.readStorage()
+            );
 
-        const currentModel = models[type];
-        if(currentModel == undefined) return false
-
-        const control = new validator(currentModel, data);
-
-        if(control.fail) return false;
-
-        const primaryKeyMap = data.primaryKeyMap ?? false;
-
-        if(!primaryKeyMap) return false;
-
-        let trackingKey = data;
-        primaryKeyMap.map(key => {
-            if(trackingKey[key]!=undefined){
-                trackingKey = trackingKey[key];
-            }
-        });
-        
-        const normalizeKey = this.stringNormalize(trackingKey);
-
-        const documentId = hash.sha256().update(normalizeKey).digest('hex');
-        
-        if(!this.findById(documentId))
-        {
-            this.db.Documents[documentId] = data;
-            this.updateDocumentCount();
-            this.saveStorage();
-            
+        }else{
+            this.indexs = elasticlunr(function () {
+                fields.map( field => this.addField(field));
+                this.setRef(ref);
+            });
         }
 
+        this.dbStatus = {
+            savingProcess : false,
+            waitingSave : false
+        };
+    
+        if(saveInterval !== undefined){
+            this.saveLoop(storageName, saveInterval);
+        }
     }
 
-    updateDocumentCount()
+    saveLoop(interval)
     {
-        this.db.Informations.documentCount +=1;
+        setInterval( ()=>{
+            const currentStatus = this.dbStatus;
+            if(!currentStatus.savingProcess && this.indexs != undefined && currentStatus.waitingSave){
+                this.dbStatus.savingProcess = true;
+
+                const jsonString = this.indexs.toJSON();
+                this.saveStorage(jsonString);
+                this.dbStatus.waitingSave = false;
+                this.dbStatus.savingProcess = false;
+            }
+
+        }, interval);
     }
 
-    findById(id)
+
+    pushData(data)
     {
-        if(this.db.Documents[id] != undefined) return true;
-        else return false;
+        const currentModel = models[data.document.documentType] ?? false;
+
+        if(!currentModel) return {status : false, error : validatorEnums.MISSING_SAMPLE_MODEL}
+
+        const control = new validator(currentModel, data);
+        if(control.fail){
+            return {status : false, error : control.fail}
+        }
+
+        let normalizeRefValue;
+
+        if(data.refInDocument !== undefined){
+            normalizeRefValue = data.document[data.refInDocument];
+        }
+
+        data.document.documentId = hash.sha256().update(
+            this.stringNormalize(normalizeRefValue)
+        ).digest('hex');
+
+        this.indexs.addDoc(data.document);
+
+        if(this.findByRef(data.document.documentId)){
+            this.dbStatus.waitingSave = true;
+            return {status : true, message : databaseEnums.PROCESS_COMPLATED}
+        }
+        return {status : false, error : true}
+
     }
+
+    findByRef(ref)
+    {
+        return this.indexs.documentStore.docs[ref] || false;
+    }   
 
     stringNormalize(string)
     {
