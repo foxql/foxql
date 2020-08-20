@@ -6,14 +6,16 @@
         <script src="../../client.js"></script>
         <script>
 
-            window.foxQL.pushData({
+            const insert = window.foxQL.pushData({
                 document : {
-                    title : "Test başlığı",
-                    content : "Test içeriği!"
+                    title : "osman",
+                    content : "test içeriği lorem ipsum vesaire...",
+                    documentType : 'entry'
                 },
-                type : "document",
-                primaryKeyMap : ['document', 'title']
+                refInDocument : 'title'
             });
+
+            console.log(insert);
 
         </script>
     </body>

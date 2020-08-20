@@ -9,8 +9,8 @@
   "author": "Bora Erdinç Özer",
   "license": "ISC",
   "dependencies": {
+    "elasticlunr": "^0.9.5",
     "hash.js": "^1.1.7",
-    "simple-peer": "^9.6.2",
     "socket.io-client": "^2.3.0",
     "socket.io-p2p": "^2.2.0"
   }

@@ -5,7 +5,16 @@ var network = new FoxQL({
   numClients : 10,
   autoUpgrade : true,
   host : "http://localhost:1200",
-  storageName : "foxql-storage"
+  database : {
+    storageName : "foxql-database",
+    saveInterval : 800,
+    fields : [
+        'title',
+        'content',
+        'documentType'
+    ],
+    ref : 'documentId'
+  }
 });
 
 network.open(connect =>{

@@ -11,6 +11,12 @@ module.exports = {
             min : 10,
             max : 1500,
             required : true
+        },
+        documentType : {
+            type : 'string',
+            min : 3,
+            max : 20,
+            required : true
         }
     }
 }
