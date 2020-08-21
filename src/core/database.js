@@ -107,7 +107,7 @@ module.exports = class extends require('./storage.js'){
     {
         const doc = this.findByRef(ref);
         if(!doc) return {status : false, error : databaseEnums.NOT_FOUND_DOCUMENT_BY_REF};
-        
+
         this.indexs.removeDoc(doc);
 
         if(this.indexs.documentStore.hasDoc(ref)) return {status : false, error : databaseEnums.PROCESS_NOT_COMPLATED};
