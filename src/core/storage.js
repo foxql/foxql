@@ -1,4 +1,6 @@
-const storageTemplate = require('../models/empty-storage.js')
+const lz77 = require('./lz77.js');
+
+const compressor = new lz77();
 
 module.exports = class {
 
@@ -16,14 +18,14 @@ module.exports = class {
     readStorage()
     {
         return JSON.parse(
-            this.findStorage()
+            compressor.decompress(this.findStorage())
         );
     }
 
     saveStorage(dump)
     {
         localStorage.setItem(this.storageName, 
-            JSON.stringify(dump)    
+            compressor.compress(JSON.stringify(dump))    
         );
     }
 }
