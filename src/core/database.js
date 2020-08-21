@@ -90,7 +90,7 @@ module.exports = class extends require('./storage.js'){
         return this.indexs.documentStore.docs[ref] || false;
     }   
 
-    search(params)
+    localSearch(params)
     {
         let refs = this.indexs.search(params);
         
@@ -101,6 +101,20 @@ module.exports = class extends require('./storage.js'){
         })
 
         return docs;
+    }
+
+    localRemoveDoc(ref)
+    {
+        const doc = this.findByRef(ref);
+        if(!doc) return {status : false, error : databaseEnums.NOT_FOUND_DOCUMENT_BY_REF};
+        
+        this.indexs.removeDoc(doc);
+
+        if(this.indexs.documentStore.hasDoc(ref)) return {status : false, error : databaseEnums.PROCESS_NOT_COMPLATED};
+
+        this.dbStatus.waitingSave = true;
+        return {status : true}
+
     }
 
     stringNormalize(string)
