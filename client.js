@@ -7,7 +7,7 @@ var network = new FoxQL({
   host : "http://localhost:1200",
   database : {
     storageName : "foxql-database",
-    saveInterval : 800,
+    saveInterval : 500,
     fields : [
         'title',
         'content',
