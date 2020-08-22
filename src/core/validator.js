@@ -2,62 +2,56 @@ const enums = require('../enums/validator-enum.js');
 
 module.exports = class {
 
-    constructor(template, data)
+    constructor(model, data)
     {
         this.fail = false;
 
-        for(let parentKey in template)
+        for(let modelKey in model)
         {
-            const subTemplateObject = template[parentKey];
-            const subObject = data[parentKey] ?? false;
-
-            if(!subObject) {
-                this.fail = enums.MISSING_PARENT_KEY;
-            }
             
-            if(typeof subTemplateObject == 'object'){
-               
-                for(let subKey in subTemplateObject)
-                {
-                    const requirements = subTemplateObject[subKey];
-                    const compulsory = requirements.required;
-                    const subData = subObject[subKey];
-                    if(compulsory && subData == undefined) {
-                        this.fail = enums.MISSING_KEY;
-                    }else{
+            if(data[modelKey] == undefined) this.fail = enums.MISSING_PARENT_KEY;
 
-                        const type = requirements.type ?? false;
+            if(!this.fail){
 
-                        if(typeof subData != type){
-                            this.fail = enums.DATA_TYPE;
-                        }
+                const requirements = model[modelKey];
+                const dataArgs = data[modelKey];
 
-                        const min = requirements.min ?? false;
-
-                        const lenght = subData.length;
-
-                        if(min && lenght < min){
-                            this.fail = enums.VALUE_LENGHT;
-                        }
-
-                        const max = requirements.max ?? false;
-
-                        if(max && lenght > max){
-                            this.fail = enums.VALUE_LENGHT;
-                        }
-
+                if(typeof dataArgs == 'object'){
+                    for(let requirementsKey in requirements){
+                        this.eachRequirements(requirements[requirementsKey], dataArgs[requirementsKey]);
                     }
-
-                    
-                    
+                }else{
+                    this.eachRequirements(requirements, dataArgs);
                 }
 
             }
             
         }
+    }
+
+    eachRequirements(requirements, data)
+    {
+        for(let key in requirements){
+            if(this[key]!==undefined && !this.fail) this[key](requirements[key], data);
+        }
+    }
 
 
-        return this.fail;
+    type(type, data)
+    {
+        this.fail = typeof data != type ? enums.DATA_TYPE : false;
+    }
+    min(min, data)
+    {
+        this.fail = (data.length < min) ? enums.VALUE_LENGHT : false;
+    }
+    max(max, data)
+    {
+        this.fail = (data.length > max) ? enums.VALUE_LENGHT : false;
+    }
+    size(size, data)
+    {
+        this.fail = (data.length !== size) ? enums.VALUE_LENGHT : false;
     }
 
 }
