@@ -32,9 +32,7 @@ module.exports = class extends require('./storage.js'){
             waitingSave : false
         };
     
-        if(saveInterval !== undefined){
-            this.saveLoop(storageName, saveInterval);
-        }
+        if(saveInterval !== undefined) this.saveLoop(storageName, saveInterval);
     }
 
     saveLoop(interval)
