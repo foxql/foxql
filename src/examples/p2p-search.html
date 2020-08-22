@@ -5,7 +5,14 @@
     <body>
         <script src="../../client.js"></script>
         <script>
-           // window.foxQL.query();
+            const query = {
+                database : {
+                    method : 'localSearch',
+                    params : 'test'
+                }
+            };
+            const signalBegin = window.foxQL.querySignal(query);
+            console.log(signalBegin);
 
         </script>
     </body>
