@@ -3,11 +3,8 @@ const io = require('socket.io-client');
 const networkEnum = require("../enums/network-enum.js");
 const validator = require('./validator.js');
 const events = {
-    message : require("../events/message.js")
-};
-
-const models = {
-    signal : require('../models/network-signal.js')
+    message : require("../events/message.js"),
+    querySignal : require('../events/query-signal.js')
 };
 
 module.exports = class extends require("./database.js"){
@@ -19,6 +16,10 @@ module.exports = class extends require("./database.js"){
         this.p2p = null;
 
         this.clients = {};
+
+        this.networkDataModels = {
+            signal : require('../models/query-signal.js')
+        };
     }
 
     /**
@@ -54,7 +55,7 @@ module.exports = class extends require("./database.js"){
     {
         eventList.map(event=>{
             if(events[event]!==undefined){
-                new events[event](this.p2p);
+                events[event](this);
             }
         });
     }
@@ -73,14 +74,18 @@ module.exports = class extends require("./database.js"){
 
     querySignal(query)
     {   
-        const validateQueryObject = new validator(models.signal, query);
+        const validateQueryObject = new validator(this.networkDataModels.signal, query);
 
-        if(validateQueryObject.fail){
-            return {status : false, error : control.fail}
-        }
-
+        if(validateQueryObject.fail) return {status : false, error : validateQueryObject.fail};
         this.p2p.emit(networkEnum.QUERY_SIGNAL, query);
+        return {status : true};
     }   
+
+
+    existSystemMethod(method)
+    {
+
+    }
 
 
 
