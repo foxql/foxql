@@ -9,5 +9,10 @@ module.exports = {
         params : {
             required : true
         }
+    },
+    peerId : {  
+        type : 'string',
+        size : 20,
+        required : true
     }
 };

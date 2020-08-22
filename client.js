@@ -24,7 +24,8 @@ network.open(connect =>{
 
 network.loadEvents([
   'message',
-  'ready'
+  'ready',
+  'querySignal'
 ], listener=>{
   console.log(listener);
 });
