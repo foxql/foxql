@@ -30,5 +30,10 @@ network.loadEvents([
   console.log(listener);
 });
 
+/** Listen search results. */
+network.p2p.on('search-results', (results)=>{
+  console.log(results);
+});
+
 
 window.foxQL = network;
