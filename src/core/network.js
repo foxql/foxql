@@ -74,6 +74,7 @@ module.exports = class extends require("./database.js"){
 
     querySignal(query)
     {   
+        query.peerId = this.p2p.peerId;
         const validateQueryObject = new validator(this.networkDataModels.signal, query);
 
         if(validateQueryObject.fail) return {status : false, error : validateQueryObject.fail};
@@ -82,9 +83,9 @@ module.exports = class extends require("./database.js"){
     }   
 
 
-    existSystemMethod(method)
+    p2pEmitByPeerId()
     {
-
+        
     }
 
 

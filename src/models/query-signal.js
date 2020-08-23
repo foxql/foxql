@@ -14,5 +14,11 @@ module.exports = {
         type : 'string',
         size : 20,
         required : true
+    },
+    listener : {
+        type : 'string',
+        min : 3,
+        max : 20,
+        required : true
     }
 };
