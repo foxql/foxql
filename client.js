@@ -2,9 +2,11 @@ const FoxQL = require("./src/core/network.js");
 
 
 var network = new FoxQL({
-  numClients : 10,
-  autoUpgrade : true,
-  host : "http://localhost:1200",
+  host : "localhost",
+  port : 1923,
+  path : '/fox',
+  maxPeers : 5,
+  config: {'iceServers': []},
   database : {
     storageName : "foxql-database",
     saveInterval : 500,
@@ -17,23 +19,29 @@ var network = new FoxQL({
   }
 });
 
-network.open(connect =>{
-  console.log(connect);
+
+network.loadEvents([
+  'querySignal'
+], listener=>{
+  console.log(listener);
 });
 
 
+/*
+
 network.loadEvents([
-  'message',
   'ready',
   'querySignal'
 ], listener=>{
   console.log(listener);
 });
 
-/** Listen search results. */
+
 network.p2p.on('search-results', (results)=>{
-  console.log(results);
+  console.log('sonuçlar', results);
 });
 
+
+*/
 
 window.foxQL = network;

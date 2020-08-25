@@ -1,54 +1,73 @@
-const p2p = require('socket.io-p2p');
-const io = require('socket.io-client');
+import Peer from 'peerjs';
+
 const networkEnum = require("../enums/network-enum.js");
 const validator = require('./validator.js');
+const socketListener = require('./socket-listener.js');
 const events = {
-    message : require("../events/message.js"),
     querySignal : require('../events/query-signal.js')
 };
 
 module.exports = class extends require("./database.js"){
 
-    constructor({database, ...rest}){
+    constructor({database, ...options}){
         super(database)
-        this.options = rest;
-        this.socket = null;
-        this.p2p = null;
+        this.options = options;
 
-        this.clients = {};
+        this.peerId = this.randomPeerId();
+
+        this.peer = new Peer(this.peerId, options);
+        this.socket = new socketListener(this.peer.socket);
+
+        this.socket.on('offerList',this.offerList.bind(this));
 
         this.networkDataModels = {
             signal : require('../models/query-signal.js')
         };
+
+        this._events = {};
+    }
+
+    offerData(event)
+    {
+        if(typeof event !== 'object') return false;
+        if(event.type == undefined || event.data == undefined) return false;
+
+        this.emit(event.type, event.data);
+    }
+
+    offerClose(id)
+    {
+        this.emit('offer-close', id);
     }
 
     /**
-     * 
-     * @param {*} params - network options object insert constructor object
+     * @param {*} offers - new connected user list.
      */
-    readOptions(params)
+    offerList(offers)
     {
-        if(params.numClients!==undefined){
-            this.options.numClients = params.numClients;
-        }
-
-        if(params.autoUpgrade!==undefined){
-            this.options.autoUpgrade = params.autoUpgrade;
-        }
-
-        if(params.host!==undefined){
-            this.options.host = params.host;
-        }
-
+        offers.map( offer => {
+                const conn = this.peer.connect(offer);
+                const id = conn.peer;
+                conn.on('data', this.offerData.bind(this))
+                conn.on('close', this.offerClose.bind(this, id));
+        });
     }
 
-    open(callback)
+    on(name, listener)
     {
-        this.socket = io(this.options.host);
-        this.p2p = new p2p(this.socket,this.options,()=>{
-            console.log(networkEnum.P2P_CONNECTED);
-            callback(true);
-        });
+        if(this._events[name] == undefined) this._events[name] = [];
+        this._events[name].push(listener);
+    }
+
+    emit(name, data)
+    {
+        if(this._events[name] == undefined) return false;
+
+        const callbackMethod = (callback) => {
+            callback(data);
+        };
+
+        this._events[name].forEach(callbackMethod);
     }
 
     loadEvents(eventList)
@@ -83,11 +102,10 @@ module.exports = class extends require("./database.js"){
     }   
 
 
-    p2pEmitByPeerId()
+    randomPeerId()
     {
-        
+        return 'fox_' + Math.random().toString(36).substr(2, 16);
     }
-
 
 
 }
