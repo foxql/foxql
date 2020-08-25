@@ -94,7 +94,8 @@ module.exports = class extends require('./storage.js'){
         
         let docs = [];
         refs.map( ref => {
-            const doc = this.findByRef(ref.ref);
+            let doc = this.findByRef(ref.ref);
+            doc.score = ref.score;
             if(doc) return docs.push(doc);
         })
 
