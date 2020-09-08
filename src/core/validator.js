@@ -5,7 +5,6 @@ module.exports = class {
     constructor(model, data)
     {
         this.fail = false;
-
         for(let modelKey in model)
         {
             
@@ -52,6 +51,10 @@ module.exports = class {
     size(size, data)
     {
         this.fail = (data.length !== size) ? enums.VALUE_LENGHT : false;
+    }
+    types(types, data)
+    {
+        types.forEach(type => this.fail = typeof data != type ? enums.DATA_TYPE : false);
     }
 
 }
