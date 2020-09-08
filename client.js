@@ -21,12 +21,15 @@ var network = new FoxQL({
 
 
 network.loadEvents([
-  'querySignal'
+  'searchEvent'
 ], listener=>{
   console.log(listener);
 });
 
-
+/*network.on('search-example-search-foxql', (data)=>{
+  console.log(data)
+});
+*/
 /*
 
 network.loadEvents([

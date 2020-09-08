@@ -3,8 +3,9 @@ import Peer from 'peerjs';
 const networkEnum = require("../enums/network-enum.js");
 const validator = require('./validator.js');
 const socketListener = require('./socket-listener.js');
+
 const events = {
-    querySignal : require('../events/query-signal.js')
+    searchEvent : require('../events/search-event.js')
 };
 
 module.exports = class extends require("./database.js"){
@@ -16,39 +17,54 @@ module.exports = class extends require("./database.js"){
         this.peerId = this.randomPeerId();
 
         this.peer = new Peer(this.peerId, options);
+
+        this.peer.on('connection', conn => {
+            conn.on('data', this.offerEvent.bind(this))
+        });
+
         this.socket = new socketListener(this.peer.socket);
 
         this.socket.on('offerList',this.offerList.bind(this));
 
+
         this.networkDataModels = {
-            signal : require('../models/query-signal.js')
+            eventObject : require('../models/event-object.js')
         };
 
         this._events = {};
     }
 
-    offerData(event)
+    offerEvent(event)
     {
+        console.log(event);
         if(typeof event !== 'object') return false;
-        if(event.type == undefined || event.data == undefined) return false;
+        
+        const validateQueryObject = new validator(this.networkDataModels.eventObject, event);
 
-        this.emit(event.type, event.data);
+        if(validateQueryObject.fail) return {status : false, error : validateQueryObject.fail};
+
+        if(events[event.eventType]!=undefined){
+           event.network = this; 
+        }
+        
+        
+        this._emit(event.eventType, event);
     }
 
     offerClose(id)
     {
-        this.emit('offer-close', id);
+        this._emit('offer-close', id);
     }
 
     /**
-     * @param {*} offers - new connected user list.
+     * @method offerList listen new connections and setup offer connection.
      */
     offerList(offers)
     {
         offers.map( offer => {
                 const conn = this.peer.connect(offer);
                 const id = conn.peer;
-                conn.on('data', this.offerData.bind(this))
+                conn.on('data', this.offerEvent.bind(this))
                 conn.on('close', this.offerClose.bind(this, id));
         });
     }
@@ -59,7 +75,7 @@ module.exports = class extends require("./database.js"){
         this._events[name].push(listener);
     }
 
-    emit(name, data)
+    _emit(name, data)
     {
         if(this._events[name] == undefined) return false;
 
@@ -74,32 +90,44 @@ module.exports = class extends require("./database.js"){
     {
         eventList.map(event=>{
             if(events[event]!==undefined){
-                events[event](this);
+                this.on(event, events[event]);
             }
         });
     }
 
-
-    push(data)
+    /**
+     * @method broadcastEmit - send data all connected peer.
+     */
+    broadcastEmit(data)
     {
+        data.peerId = this.peerId;
+        const validateQueryObject = new validator(this.networkDataModels.eventObject, data);
+        if(validateQueryObject.fail) return {status : false, error : validateQueryObject.fail};
 
-        if(data.data!==undefined){
-            data.data.event = data.listener;
-        }
+        this.peer._connections.forEach(connections=>{
+            connections.forEach(con => con.send(data));
+        });
+    }
 
-        this.p2p.emit(data.listener, data.data);
+    /**
+     * @method emit - send data spesific peer.
+     */
+    emit(data, offerId)
+    {
+        data.peerId = this.peerId;
+        const validateQueryObject = new validator(this.networkDataModels.eventObject, data);
+        if(validateQueryObject.fail) return {status : false, error : validateQueryObject.fail};
+
+        this.peer._connections.forEach(connections=>{
+            connections.forEach(conn => {
+                if(conn.peerId == offerId){
+                    conn.send(data);
+                }
+            });
+        });
     }
 
 
-    querySignal(query)
-    {   
-        query.peerId = this.p2p.peerId;
-        const validateQueryObject = new validator(this.networkDataModels.signal, query);
-
-        if(validateQueryObject.fail) return {status : false, error : validateQueryObject.fail};
-        this.p2p.emit(networkEnum.QUERY_SIGNAL, query);
-        return {status : true};
-    }   
 
 
     randomPeerId()
