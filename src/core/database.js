@@ -10,10 +10,9 @@ const models = {
 
 
 module.exports = class extends require('./storage.js'){
-    constructor({storageName, fields, ref, saveInterval})
+    constructor({storageName, fields, ref, saveInterval, maxDocumentCount})
     {
         super(storageName)
-
         const existDump = this.findStorage();
         if(existDump){
             this.indexs = elasticlunr.Index.load(
@@ -26,6 +25,9 @@ module.exports = class extends require('./storage.js'){
                 this.setRef(ref);
             });
         }
+
+        this.maxDocumentCount = maxDocumentCount;
+        this.refField = ref;
 
         this.dbStatus = {
             savingProcess : false,
@@ -76,11 +78,22 @@ module.exports = class extends require('./storage.js'){
         this.indexs.addDoc(data.document);
 
         if(this.findByRef(data.document.documentId)){
+            this.maxDocumentLengthControl();
             this.dbStatus.waitingSave = true;
             return {status : true, message : databaseEnums.PROCESS_COMPLATED}
         }
         return {status : false, error : true}
 
+    }
+
+    maxDocumentLengthControl()
+    {
+        if(this.indexs.documentStore.length > this.maxDocumentCount){
+            const targetDocumentRef = Object.keys(this.indexs.documentStore.docs).shift();
+
+            this.localRemoveDoc(targetDocumentRef);
+
+        }
     }
 
     findByRef(ref)
