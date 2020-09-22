@@ -18,5 +18,11 @@ module.exports = {
             max : 20,
             required : true
         }
+    },
+    refInDocument : {
+        type : 'string',
+        min : 3,
+        max : 20,
+        required : true
     }
 }

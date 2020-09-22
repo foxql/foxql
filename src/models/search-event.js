@@ -1,12 +1,14 @@
 module.exports = {
-    params : {
+    query : {
+        type : 'string',
         required : true,
-        types : ['object', 'string']
+        min : 1,
+        max : 120
     },
     listener : {
         type : 'string',
         min : 3,
-        max : 20,
+        max : 40,
         required : true
     }
 }
