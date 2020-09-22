@@ -15,36 +15,20 @@ var network = new FoxQL({
         'content',
         'documentType'
     ],
-    ref : 'documentId'
+    ref : 'documentId',
+    maxDocumentCount : 3
   }
 });
 
 
 network.loadEvents([
-  'searchEvent'
-], listener=>{
-  console.log(listener);
-});
+  'searchEvent',
+  'publishEvent'
+]);
 
-/*network.on('search-example-search-foxql', (data)=>{
+network.on('search-example-search-foxql', (data)=>{
   console.log(data)
 });
-*/
-/*
 
-network.loadEvents([
-  'ready',
-  'querySignal'
-], listener=>{
-  console.log(listener);
-});
-
-
-network.p2p.on('search-results', (results)=>{
-  console.log('sonuçlar', results);
-});
-
-
-*/
 
 window.foxQL = network;
