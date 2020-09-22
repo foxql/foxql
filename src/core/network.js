@@ -1,11 +1,11 @@
 import Peer from 'peerjs';
 
-const networkEnum = require("../enums/network-enum.js");
 const validator = require('./validator.js');
 const socketListener = require('./socket-listener.js');
 
 const events = {
-    searchEvent : require('../events/search-event.js')
+    searchEvent : require('../events/search-event.js'),
+    publishEvent : require('../events/publish-document.js')
 };
 
 module.exports = class extends require("./database.js"){
@@ -36,9 +36,7 @@ module.exports = class extends require("./database.js"){
 
     offerEvent(event)
     {
-        console.log(event);
         if(typeof event !== 'object') return false;
-        
         const validateQueryObject = new validator(this.networkDataModels.eventObject, event);
 
         if(validateQueryObject.fail) return {status : false, error : validateQueryObject.fail};
@@ -46,8 +44,7 @@ module.exports = class extends require("./database.js"){
         if(events[event.eventType]!=undefined){
            event.network = this; 
         }
-        
-        
+
         this._emit(event.eventType, event);
     }
 
@@ -103,7 +100,6 @@ module.exports = class extends require("./database.js"){
         data.peerId = this.peerId;
         const validateQueryObject = new validator(this.networkDataModels.eventObject, data);
         if(validateQueryObject.fail) return {status : false, error : validateQueryObject.fail};
-
         this.peer._connections.forEach(connections=>{
             connections.forEach(con => con.send(data));
         });
@@ -121,6 +117,7 @@ module.exports = class extends require("./database.js"){
         this.peer._connections.forEach(connections=>{
             connections.forEach(conn => {
                 if(conn.peerId == offerId){
+                    
                     conn.send(data);
                 }
             });
