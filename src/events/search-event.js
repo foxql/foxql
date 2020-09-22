@@ -5,8 +5,16 @@ module.exports = ({network, ...event}) => {
     const validate = new validator(model, data);
     if(validate.fail) return {status : false, error : validate.fail};
 
-    const results = network.localSearch(data.params);
-    
+    const queryParams = data.params || false;
+
+    let results = [];
+
+    if(queryParams){
+        results = network.localSearch(data.query, queryParams);
+    }else{
+        results = network.localSearch(data.query);
+    }
+
     if(results.length <= 0) return;
 
     const answerObject = {

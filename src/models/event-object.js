@@ -2,7 +2,7 @@ module.exports = {
     eventType : {
         type : 'string',
         min : 3,
-        max : 20,
+        max : 40,
         required : true
     },
     data : {
