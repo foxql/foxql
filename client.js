@@ -1,34 +1,22 @@
-const FoxQL = require("./src/core/network.js");
+const network = require("./src/core/network.js");
 
+const foxQL = new network({});
 
-var network = new FoxQL({
-  host : "localhost",
-  port : 1923,
-  path : '/fox',
-  maxPeers : 5,
-  config: {'iceServers': []},
-  database : {
-    storageName : "foxql-database",
-    saveInterval : 500,
-    fields : [
-        'title',
-        'content',
-        'documentType'
-    ],
-    ref : 'documentId',
-    maxDocumentCount : 3
-  }
-});
-
-
-network.loadEvents([
+foxQL.loadEvents([
   'searchEvent',
   'publishEvent'
 ]);
 
-network.on('search-example-search-foxql', (data)=>{
+const searchEventListener = {
+    name : 'search-example-search-foxql',
+    listenerDropTime : 300
+};
+
+foxQL.on(searchEventListener, (data)=>{
   console.log(data)
+},(droppedEvent)=>{
+  console.log('Event kaldırıldı.');
 });
 
 
-window.foxQL = network;
+window.foxQL = foxQL;
