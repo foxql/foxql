@@ -8,9 +8,38 @@ const events = {
     publishEvent : require('../events/publish-document.js')
 };
 
+const defaultDatabaseConfig  = {
+    storageName : "foxql-database",
+    saveInterval : 500,
+    fields : [
+        'title',
+        'content',
+        'documentType'
+    ],
+    ref : 'documentId',
+    maxDocumentCount : 1000
+};
+
+const networkHost = 'localhost';
+const networkPort = 1923;
+const networkApiPath = '/fox';
+
+const defaultMaxPeers = 5;
+
 module.exports = class extends require("./database.js"){
 
     constructor({database, ...options}){
+
+        options.host = networkHost;
+        options.port = networkPort;
+        options.path = networkApiPath;
+
+        options.maxPeers = (options.maxPeers==undefined) ? defaultMaxPeers : options.maxPeers; 
+
+        if(database == undefined){
+            database = defaultDatabaseConfig;
+        }
+
         super(database)
         this.options = options;
 
@@ -66,8 +95,28 @@ module.exports = class extends require("./database.js"){
         });
     }
 
-    on(name, listener)
+    on(params, listener, droppedEvent)
     {
+        let name = null;
+        if(typeof params == 'object'){
+
+            if(params.name === undefined) return false;
+
+            name = params.name;
+
+            const listenerDropTime = params.listenerDropTime || false;
+
+            if(listenerDropTime){
+                setTimeout(()=>{
+                    delete this._events[name];
+                    droppedEvent(true);
+                }, listenerDropTime);
+            }
+
+        }else if(typeof params == 'string'){
+            name = params;
+        }
+
         if(this._events[name] == undefined) this._events[name] = [];
         this._events[name].push(listener);
     }
