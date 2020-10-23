@@ -52,6 +52,15 @@ module.exports = class extends require('./storage.js'){
         }, interval);
     }
 
+    refInDocument(data)
+    {
+        if(data.refInDocument !== undefined){
+            return data.document[data.refInDocument];
+        }
+
+        return false;
+    }
+
 
     pushData(data)
     {
@@ -60,8 +69,17 @@ module.exports = class extends require('./storage.js'){
             return {status : false, error : control.fail}
         }
 
+        let refValue = this.stringNormalize(JSON.stringify(data.document));
+
+        const inDocumentRef = this.refInDocument(data);
+        if(inDocumentRef){
+            refValue = this.stringNormalize(inDocumentRef);
+        }
+
+
+
         data.document.documentId = hash.sha256().update(
-            this.stringNormalize(JSON.stringify(data.document))
+            refValue
         ).digest('hex');
 
         this.indexs.addDoc(data.document);
