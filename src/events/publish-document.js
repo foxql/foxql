@@ -1,4 +1,4 @@
-const model = require('../models/entry-document.js');
+const model = require('../models/sample-document.js');
 const validator = require('../core/validator.js');
 module.exports = ({network, ...event}) => {
     const data = event.data || {};

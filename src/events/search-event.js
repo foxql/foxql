@@ -3,6 +3,7 @@ const validator = require('../core/validator.js');
 module.exports = ({network, ...event}) => {
     const data = event.data || {};
     const validate = new validator(model, data);
+    console.log(validate);
     if(validate.fail) return {status : false, error : validate.fail};
 
     const queryParams = data.params || false;
@@ -16,7 +17,7 @@ module.exports = ({network, ...event}) => {
     }
 
     if(results.length <= 0) return;
-
+    
     const answerObject = {
         eventType : data.listener,
         data : {
