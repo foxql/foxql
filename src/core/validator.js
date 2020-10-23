@@ -1,10 +1,15 @@
 const enums = require('../enums/validator-enum.js');
 
+const exclusions = [
+    'useDocType'
+];
+
 module.exports = class {
 
     constructor(model, data)
     {
         this.fail = false;
+        this.object = data;
         for(let modelKey in model)
         {
             
@@ -17,7 +22,13 @@ module.exports = class {
 
                 if(typeof dataArgs == 'object'){
                     for(let requirementsKey in requirements){
-                        this.eachRequirements(requirements[requirementsKey], dataArgs[requirementsKey]);
+                        const requirement = requirements[requirementsKey];
+                        if(dataArgs[requirementsKey] === undefined && requirement.required ){
+                            this.fail = enums.MISSING_KEY;
+                        }else if(dataArgs[requirementsKey] !== undefined){
+                            this.eachRequirements(requirement, dataArgs[requirementsKey]);
+                        }
+                        
                     }
                 }else{
                     this.eachRequirements(requirements, dataArgs);
@@ -38,7 +49,7 @@ module.exports = class {
 
     type(type, data)
     {
-        this.fail = typeof data != type ? enums.DATA_TYPE : false;
+        this.fail = typeof data != type ? enums.DATA_TYPE+ ''+data : false;
     }
     min(min, data)
     {
@@ -55,6 +66,14 @@ module.exports = class {
     types(types, data)
     {
         types.forEach(type => this.fail = typeof data != type ? enums.DATA_TYPE : false);
+    }
+    in(values, data)
+    {
+        this.fail = (values.indexOf(data)<0) ? enums.NOT_FOUND_IN_ARRAY : false;
+    }
+    useDocType(types)
+    {
+        this.fail = (types.indexOf(this.object.document.documentType)<0) ? enums.NOT_FOUND_IN_ARRAY : false;
     }
 
 }

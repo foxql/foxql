@@ -14,7 +14,9 @@ const defaultDatabaseConfig  = {
     fields : [
         'title',
         'content',
-        'documentType'
+        'documentType',
+        'url',
+        'domain'
     ],
     ref : 'documentId',
     maxDocumentCount : 1000

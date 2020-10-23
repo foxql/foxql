@@ -1,11 +1,10 @@
 const validator = require('./validator.js');
 const hash = require('hash.js');
 const elasticlunr = require('elasticlunr');
-const validatorEnums = require('../enums/validator-enum.js');
 const databaseEnums = require('../enums/database-enum.js');
 
 const models = {
-    entry : require('../models/entry-document.js')
+    document : require('../models/sample-document.js')
 };
 
 
@@ -56,23 +55,13 @@ module.exports = class extends require('./storage.js'){
 
     pushData(data)
     {
-        const currentModel = models[data.document.documentType] ?? false;
-
-        if(!currentModel) return {status : false, error : validatorEnums.MISSING_SAMPLE_MODEL}
-
-        const control = new validator(currentModel, data);
+        const control = new validator(models.document, data);
         if(control.fail){
             return {status : false, error : control.fail}
         }
 
-        let normalizeRefValue;
-
-        if(data.refInDocument !== undefined){
-            normalizeRefValue = data.document[data.refInDocument];
-        }
-
         data.document.documentId = hash.sha256().update(
-            this.stringNormalize(normalizeRefValue)
+            this.stringNormalize(JSON.stringify(data.document))
         ).digest('hex');
 
         this.indexs.addDoc(data.document);
