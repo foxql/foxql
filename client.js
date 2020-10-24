@@ -8,8 +8,13 @@ const foxQL = new network({});
 
 foxQL.loadEvents([
   'searchEvent',
-  'publishEvent'
+  'publishEvent',
+  'findEntryEvent'
 ]);
 
+
+foxQL.on('listen-document', (data)=>{
+  console.log(data);
+});
 
 window.foxQL = foxQL;

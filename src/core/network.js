@@ -5,7 +5,8 @@ const socketListener = require('./socket-listener.js');
 
 const events = {
     searchEvent : require('../events/search-event.js'),
-    publishEvent : require('../events/publish-document.js')
+    publishEvent : require('../events/publish-document.js'),
+    findEntryEvent : require('../events/find-document.js')
 };
 
 const defaultDatabaseConfig  = {
@@ -32,9 +33,9 @@ module.exports = class extends require("./database.js"){
 
     constructor({database, ...options}){
 
-        options.host = networkHost;
-        options.port = networkPort;
-        options.path = networkApiPath;
+        options.host = options.host || networkHost;
+        options.port = options.port || networkPort;
+        options.path = options.path || networkApiPath;
 
         options.maxPeers = (options.maxPeers==undefined) ? defaultMaxPeers : options.maxPeers; 
 
