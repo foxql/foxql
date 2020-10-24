@@ -82,6 +82,10 @@ module.exports = class extends require('./storage.js'){
             refValue
         ).digest('hex');
 
+        data.document.signature = hash.sha256().update(
+            JSON.stringify(data.document)
+        ).digest('hex');
+
         this.indexs.addDoc(data.document);
 
         if(this.findByRef(data.document.documentId)){
