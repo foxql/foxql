@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
-    "build" : "parcel build --no-source-maps --no-content-hash --no-cache --global foxql src/core/network.js"
+    "build" : "parcel build --no-source-maps --no-content-hash --no-cache --global foxql src/core/network.js -o foxql-min.js"
   },
   "author": "Bora Erdinç Özer",
   "license": "ISC",
