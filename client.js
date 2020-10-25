@@ -9,7 +9,8 @@ const foxQL = new network({});
 foxQL.loadEvents([
   'searchEvent',
   'publishEvent',
-  'findEntryEvent'
+  'findEntryEvent',
+  'randomDocumentEvent'
 ]);
 
 
