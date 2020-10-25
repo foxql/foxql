@@ -1,11 +1,11 @@
-const model = require('../models/find-document.js');
+const model = require('../models/random-document.js');
 const validator = require('../core/validator.js');
 module.exports = ({network, ...event}) => {
     const data = event.data || {};
     const validate = new validator(model, data);
     if(validate.fail) return {status : false, error : validate.fail}
     
-    const document = network.findByRef(data.ref);
+    const document = network.randomDocument(data.type);
 
     if(!document){
         return false;

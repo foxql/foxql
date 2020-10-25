@@ -6,7 +6,8 @@ const socketListener = require('./socket-listener.js');
 const events = {
     searchEvent : require('../events/search-event.js'),
     publishEvent : require('../events/publish-document.js'),
-    findEntryEvent : require('../events/find-document.js')
+    findEntryEvent : require('../events/find-document.js'),
+    randomDocumentEvent : require('../events/random-document.js')
 };
 
 const defaultDatabaseConfig  = {
