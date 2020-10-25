@@ -76,8 +76,6 @@ module.exports = class extends require('./storage.js'){
             refValue = this.stringNormalize(inDocumentRef);
         }
 
-
-
         data.document.documentId = hash.sha256().update(
             refValue
         ).digest('hex');
@@ -137,13 +135,32 @@ module.exports = class extends require('./storage.js'){
 
         this.dbStatus.waitingSave = true;
         return {status : true}
+    }
 
+    randomDocument(type)
+    {
+        const documentStore = this.indexs.documentStore.docs;
+        const docKeys = Object.keys(this.indexs.documentStore.docs);
+        const filteredDocs = docKeys.reduce((r, ref)=>{
+            if(documentStore[ref].documentType == type){
+                r[ref] = documentStore[ref];
+                return r;
+            }
+        }, {});
+
+        const docs = Object.keys(filteredDocs);
+
+        if(docs.length <= 0) {return false;}
+
+
+        const key = Math.floor(Math.random() * docs.length);
+        return filteredDocs[docs[key]];
     }
 
     stringNormalize(string)
     {
         return string.toLowerCase().trim().
-        replace(/^[a-z0-9]+$/i,'')
+        replace(/[^a-z0-9]/gi,'')
         .replace(/ğ/gi,'g')
         .replace(/ü/gi,'u')
         .replace(/ş/gi,'s')
