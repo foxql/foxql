@@ -5,18 +5,19 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
-    "build" : "parcel build --no-source-maps --no-content-hash --no-cache --global foxql src/core/network.js -o foxql-min.js"
+    "build": "parcel build --no-source-maps --no-content-hash --no-cache --global foxql src/core/network.js -o foxql-min.js"
   },
   "author": "Bora Erdinç Özer",
   "license": "ISC",
   "dependencies": {
+    "@foxql/foxql-index": "^1.0.4",
     "elasticlunr": "^0.9.5",
     "hash.js": "^1.1.7",
     "peerjs": "^1.3.1"
   },
   "targets": {
-		"main": {
-			"outputFormat": "esmodule"
-		}
-	}
+    "main": {
+      "outputFormat": "esmodule"
+    }
+  }
 }

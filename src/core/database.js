@@ -1,6 +1,6 @@
 const validator = require('./validator.js');
 const hash = require('hash.js');
-const elasticlunr = require('elasticlunr');
+const foxqlIndex = require('@foxql/foxql-index');
 const databaseEnums = require('../enums/database-enum.js');
 
 const models = {
@@ -12,18 +12,18 @@ module.exports = class extends require('./storage.js'){
     constructor({storageName, fields, ref, saveInterval, maxDocumentCount})
     {
         super(storageName)
+
+        this.indexs = new foxqlIndex();
+
+        this.indexs.addField(fields);
+        this.indexs.setRef(ref);
+
         const existDump = this.findStorage();
         if(existDump){
-            this.indexs = elasticlunr.Index.load(
-                this.readStorage()
-            );
-
-        }else{
-            this.indexs = elasticlunr(function () {
-                fields.map( field => this.addField(field));
-                this.setRef(ref);
-            });
+            this.indexs.import(this.readStorage());
         }
+
+        console.log(this.indexs);
 
         this.maxDocumentCount = maxDocumentCount;
         this.refField = ref;
@@ -43,7 +43,7 @@ module.exports = class extends require('./storage.js'){
             if(!currentStatus.savingProcess && this.indexs != undefined && currentStatus.waitingSave){
                 this.dbStatus.savingProcess = true;
 
-                const jsonString = this.indexs.toJSON();
+                const jsonString = this.indexs.export();
                 this.saveStorage(jsonString);
                 this.dbStatus.waitingSave = false;
                 this.dbStatus.savingProcess = false;
@@ -86,7 +86,7 @@ module.exports = class extends require('./storage.js'){
 
         this.indexs.addDoc(data.document);
 
-        if(this.findByRef(data.document.documentId)){
+        if(this.indexs.getDoc(data.document.documentId)){
             this.maxDocumentLengthControl();
             this.dbStatus.waitingSave = true;
             return {status : true, message : databaseEnums.PROCESS_COMPLATED}
@@ -97,41 +97,22 @@ module.exports = class extends require('./storage.js'){
 
     maxDocumentLengthControl()
     {
-        if(this.indexs.documentStore.length > this.maxDocumentCount){
-            const targetDocumentRef = Object.keys(this.indexs.documentStore.docs).shift();
+        if(this.indexs.documentLength > this.maxDocumentCount){
+            const targetDocumentRef = Object.keys(this.indexs.documents).shift();
 
             this.localRemoveDoc(targetDocumentRef);
 
         }
     }
 
-    findByRef(ref)
-    {
-        return this.indexs.documentStore.docs[ref] || false;
-    }   
-
-    localSearch(params)
-    {
-        let refs = this.indexs.search(params);
-        
-        let docs = [];
-        refs.map( ref => {
-            let doc = this.findByRef(ref.ref);
-            doc.score = ref.score;
-            if(doc) return docs.push(doc);
-        })
-
-        return docs;
-    }
-
     localRemoveDoc(ref)
     {
-        const doc = this.findByRef(ref);
+        const doc = this.indexs.getDoc(ref);
         if(!doc) return {status : false, error : databaseEnums.NOT_FOUND_DOCUMENT_BY_REF};
 
-        this.indexs.removeDoc(doc);
+        this.indexs.deleteDoc(doc);
 
-        if(this.indexs.documentStore.hasDoc(ref)) return {status : false, error : databaseEnums.PROCESS_NOT_COMPLATED};
+        if(this.indexs.getDoc(ref)) return {status : false, error : databaseEnums.PROCESS_NOT_COMPLATED};
 
         this.dbStatus.waitingSave = true;
         return {status : true}
@@ -139,8 +120,8 @@ module.exports = class extends require('./storage.js'){
 
     randomDocument(type)
     {
-        const documentStore = this.indexs.documentStore.docs;
-        const docKeys = Object.keys(this.indexs.documentStore.docs);
+        const documentStore = this.indexs.documents;
+        const docKeys = Object.keys(documentStore);
         const filteredDocs = docKeys.reduce((r, ref)=>{
             if(documentStore[ref].documentType == type){
                 r[ref] = documentStore[ref];
