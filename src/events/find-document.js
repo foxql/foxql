@@ -5,7 +5,7 @@ module.exports = ({network, ...event}) => {
     const validate = new validator(model, data);
     if(validate.fail) return {status : false, error : validate.fail}
     
-    const document = network.findByRef(data.ref);
+    const document = network.indexs.getDoc(data.ref);
 
     if(!document){
         return false;

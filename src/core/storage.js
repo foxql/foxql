@@ -17,15 +17,13 @@ module.exports = class {
 
     readStorage()
     {
-        return JSON.parse(
-            compressor.decompress(this.findStorage())
-        );
+        return compressor.decompress(this.findStorage())
     }
 
     saveStorage(dump)
     {
         localStorage.setItem(this.storageName, 
-            compressor.compress(JSON.stringify(dump))    
+            compressor.compress(dump)    
         );
     }
 }
