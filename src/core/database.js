@@ -2,6 +2,7 @@ const validator = require('./validator.js');
 const hash = require('hash.js');
 const foxqlIndex = require('@foxql/foxql-index');
 const databaseEnums = require('../enums/database-enum.js');
+const tokenizator = require('./tokenization.js');
 
 const models = {
     document : require('../models/sample-document.js')
@@ -18,12 +19,14 @@ module.exports = class extends require('./storage.js'){
         this.indexs.addField(fields);
         this.indexs.setRef(ref);
 
+        this.indexs.registerAnalyzer('tokenizer', (string)=>{
+            return new tokenizator(string, ['lowerCase', 'turkishCharReplace', 'cleanString', 'removeSpaces', '_trim'], ' ').str;
+        }); 
+
         const existDump = this.findStorage();
         if(existDump){
             this.indexs.import(this.readStorage());
         }
-
-        console.log(this.indexs);
 
         this.maxDocumentCount = maxDocumentCount;
         this.refField = ref;
@@ -140,14 +143,6 @@ module.exports = class extends require('./storage.js'){
 
     stringNormalize(string)
     {
-        return string.toLowerCase().trim().
-        replace(/[^a-z0-9]/gi,'')
-        .replace(/ğ/gi,'g')
-        .replace(/ü/gi,'u')
-        .replace(/ş/gi,'s')
-        .replace(/ı/gi,'i')
-        .replace(/ö/gi,'o')
-        .replace(/ç/gi,'c')
-        .replace(/ /gi,'-');
+        return new tokenizator(string, ['lowerCase', 'turkishCharReplace', 'cleanString'],'').str;
     }
 }
