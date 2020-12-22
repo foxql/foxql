@@ -1,19 +1,16 @@
 {
   "name": "foxql-client",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "peer to peer search engine running in your browser.",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html"
+    "dev": "parcel develop/index.html"
   },
   "author": "Bora Erdinç Özer",
   "license": "ISC",
   "dependencies": {
-    "@foxql/foxql-index": "^1.0.4"
-  },
-  "targets": {
-    "main": {
-      "outputFormat": "esmodule"
-    }
+    "@foxql/foxql-index": "^1.0.4",
+    "@foxql/foxql-peer": "^1.0.1",
+    "parcel": "^1.12.4"
   }
 }
