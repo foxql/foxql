@@ -45,3 +45,27 @@ client.use('indexOptions', {
 
 client.open();
 ```
+
+
+#### How to listen native events
+
+``` javascript
+client.pushEvents([
+    'onDocument',
+    'onSearch'
+])
+```
+
+#### Search on active peers
+
+``` javascript
+client.search({
+    query : 'example query',
+    timeOut : 300
+}, callback);
+
+async function callback(results)
+{
+    console.log(results);
+}
+```
