@@ -7,6 +7,10 @@ client.pushEvents([
     'onSearch'
 ])
 
+client.use('storageOptions', {
+    saveInterval : true
+});
+
 client.open();
 
 window.foxql = client;
