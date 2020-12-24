@@ -5,33 +5,30 @@ import events from './events.js';
 
 
 class foxql {
-
-    indexOptions = {
-        fields : [
-            'title',
-            'content'
-        ],
-        ref : 'documentId'
-    }
-
-    storageOptions = {
-        name : 'foxql-storage',
-        interval : 100,
-        saveInterval : false 
-    }
-
-    useAvaliableObjects = [
-        'serverOptions',
-        'indexOptions',
-        'storageOptions'
-    ]
-
-    indexSaveProcessing = false
-
-    indexs
-    peer
-
     constructor(){
+        
+        this.indexOptions = {
+            fields : [
+                'title',
+                'content'
+            ],
+            ref : 'documentId'
+        }
+    
+        this.storageOptions = {
+            name : 'foxql-storage',
+            interval : 100,
+            saveInterval : false 
+        }
+    
+        this.useAvaliableObjects = [
+            'serverOptions',
+            'indexOptions',
+            'storageOptions'
+        ]
+    
+        this.indexSaveProcessing = false
+
         this.indexs = new index(); 
         this.peer = new peer();
     }
