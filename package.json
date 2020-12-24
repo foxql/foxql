@@ -9,7 +9,7 @@
   "author": "Bora Erdinç Özer",
   "license": "ISC",
   "dependencies": {
-    "@foxql/foxql-index": "^1.0.4",
+    "@foxql/foxql-index": "^1.0.5",
     "@foxql/foxql-peer": "^1.0.1",
     "parcel": "^1.12.4"
   }

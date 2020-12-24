@@ -16,7 +16,8 @@ class foxql {
 
     storageOptions = {
         name : 'foxql-storage',
-        interval : 100 
+        interval : 100,
+        saveInterval : false 
     }
 
     useAvaliableObjects = [
@@ -25,11 +26,10 @@ class foxql {
         'storageOptions'
     ]
 
+    indexSaveProcessing = false
+
     indexs
     peer
-
-    indexSaveStatus = false
-
 
     constructor(){
         this.indexs = new index(); 
@@ -45,6 +45,10 @@ class foxql {
 
     open()
     {
+
+        const saveInterval = this.storageOptions.saveInterval || false;
+
+        
         this.indexs.addField(
             this.indexOptions.fields
         )
@@ -52,25 +56,52 @@ class foxql {
             this.indexOptions.ref
         )
 
+        if(saveInterval) {
+            this.storage = new storage(
+                this.storageOptions
+            );
+
+            this.loadDumpOnStorage();
+        }
+
         this.indexs.registerAnalyzer('tokenizer', (string)=>{
             return string.toLowerCase().replace(/  +/g, ' ').trim();
         }); 
 
-        this.storage = new storage(
-            this.storageOptions.name
-        );
-
         delete this.indexOptions
 
-        this.indexDatabaseLoop();
+        if(saveInterval) {
+            this.indexDatabaseLoop();
+        }
 
+    }
+
+    loadDumpOnStorage()
+    {
+        const dump = this.storage.get();
+        if(dump && typeof dump === 'string') {
+            try {
+                this.indexs.import(
+                    dump
+                );
+            }catch(e)
+            {
+                throw Error(e);
+            }
+        }
     }
 
     indexDatabaseLoop()
     {
         setInterval(()=>{
-            if(this.indexSaveStatus){
-                // todo dump db
+            if(this.indexs.waitingSave && !this.indexSaveProcessing){
+                this.indexSaveProcessing = true;
+
+                const dump = this.indexs.export();
+                this.storage.set(dump);
+
+                this.indexSaveProcessing = false;
+                this.indexs.waitingSave = false;
             }
         }, this.storageOptions.interval);
     }

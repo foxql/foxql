@@ -69,3 +69,15 @@ async function callback(results)
     console.log(results);
 }
 ```
+
+#### Storage Setup
+
+``` javascript
+client.use('storageOptions', {
+    saveInterval : true, // open storage
+    interval : 200 // index save status control interval timer (miliseconds),
+    name : 'foxql-storage' // storage name
+});
+
+
+```
