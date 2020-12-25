@@ -15,9 +15,12 @@ we building for anonymous and freedom internet.
 ### Documentation
 
 #### Install
+```
+npm i foxql
+```
 
 ``` javascript
-import foxql from '../index.js';
+import foxql from 'foxql';
 
 const client = new foxql();
 
@@ -27,7 +30,7 @@ client.open();
 #### Change Configuration
 
 ``` javascript
-import foxql from '../index.js';
+import foxql from 'foxql';
 
 const client = new foxql();
 
