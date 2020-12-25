@@ -1,17 +1,21 @@
 {
-  "name": "foxql-client",
-  "version": "0.0.1",
-  "description": "peer to peer search engine running in your browser.",
+  "name": "foxql",
+  "version": "0.0.2",
+  "description": "Peer to peer full text search engine running in your browser. We building for anonymous and freedom internet.",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel develop/index.html",
-    "build" : "parcel build index.js --no-cache --no-source-maps"
+    "dev": "parcel develop/*",
+    "build": "parcel build ./index.js --global foxql --no-source-maps -o foxql.min.js"
   },
   "author": "Bora Erdinç Özer",
   "license": "ISC",
   "dependencies": {
     "@foxql/foxql-index": "^1.0.5",
-    "@foxql/foxql-peer": "^1.0.2",
-    "parcel": "^1.12.4"
+    "@foxql/foxql-peer": "^1.0.2"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "autoprefixer": "^7.2.3",
+    "babel-preset-env": "^1.6.1"
   }
 }
