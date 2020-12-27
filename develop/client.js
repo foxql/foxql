@@ -4,8 +4,12 @@ const client = new foxql();
 
 client.pushEvents([
     'onDocument',
-    'onSearch'
+    'onSearch',
+    'onRandom'
 ])
+
+client.openNativeCollections();
+
 
 client.use('storageOptions', {
     saveInterval : true
