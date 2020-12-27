@@ -72,6 +72,17 @@ async function callback(results)
 }
 ```
 
+#### Publish document on active peers
+
+``` javascript
+client.publishDocument({
+    content : 'published test document content',
+    title : 'published!',
+    documentId : '10239129381'
+}, 'entrys');
+
+```
+
 #### Storage Setup
 
 ``` javascript
