@@ -53,7 +53,8 @@ client.open();
 ``` javascript
 client.pushEvents([
     'onDocument',
-    'onSearch'
+    'onSearch',
+    'onRandom'
 ])
 ```
 
