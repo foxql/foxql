@@ -217,6 +217,15 @@ class foxql {
 
     }
 
+    dropPeer(id)
+    {
+        if(this.peer.connections[id] !== undefined) {
+            this.peer.connections[id].dataChannel.close();
+
+            delete this.peer.connections[id]
+        }
+    }
+
 }
 
 

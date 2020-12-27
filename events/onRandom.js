@@ -1,8 +1,26 @@
+import middleware from '../core/middleware.js';
+
+const eventMiddleware = new middleware({
+    timeout : 1000, // miliseconds
+    warningLimit : 5
+});
+
 const name = 'onRandom';
 
 
 async function listener(data)
 { 
+    const by = data._by;
+    eventMiddleware.up(by);
+    const status = eventMiddleware.status(by);
+
+    if(status.warning){
+        if(this.peer.connections[by] !== undefined) {
+            this.dropPeer(by);
+        }
+        return;
+    }
+
     if(data.listener === undefined) return; 
 
     const limit = data.limit || 3;
@@ -43,7 +61,7 @@ async function listener(data)
         }
     }
 
-    this.peer.send(data._by, {
+    this.peer.send(by, {
         listener : data.listener,
         data :{
             results : results
