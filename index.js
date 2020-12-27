@@ -43,7 +43,7 @@ class foxql {
             this.currentCollections.push(collectionName);
 
             this.database.useCollection(collectionName).registerAnalyzer('tokenizer', (string)=>{
-                return string.toLowerCase().replace(/  +/g, ' ').trim();
+                return string.toLowerCase().replace(/[^\w\s]/gi, ' ').replace(/  +/g, ' ').trim();
             });
         })
     }
@@ -95,7 +95,6 @@ class foxql {
     
                     this.databaseSaveProcessing = false;
                     targetCollection.waitingSave = false;
-                    console.log('Kayıt edildiii');
                 }  
             })
         }, this.storageOptions.interval);
@@ -113,10 +112,17 @@ class foxql {
     }
 
 
-    publishDocument(document){
+    publishDocument(document, collection)
+    {
+        if(typeof collection !== 'string') return false;
+        if(!this.currentCollections.includes(collection)) return false;
+
         this.peer.broadcast({
             listener : 'onDocument',
-            data : document
+            data : {
+                document : document,
+                collection : collection
+            }
         });
     }   
 
@@ -127,8 +133,8 @@ class foxql {
 
     search({query, timeOut, collections}, callback)
     {
-        let results = [];
-        let resultsMap = {}
+        let tempResult = {};
+        let documentMap = {}
 
         if(collections == undefined) {
             collections = this.currentCollections;
@@ -143,15 +149,24 @@ class foxql {
         };
 
         this.peer.onPeer(generatedListenerName,async (data)=> {
-            const peerResuls = data.results || [];
-            if(peerResuls <= 0) return;
+            const peerResuls = data.results;
 
-            peerResuls.forEach(document => {
-                if(resultsMap[document.documentId] == undefined){
-                    results.push(document);
-                    resultsMap[document.documentId] = 1
+            for(let collection in peerResuls) {
+                if(tempResult[collection] === undefined) {
+                    tempResult[collection] = [];
                 }
-            })
+
+                const documents = peerResuls[collection];
+
+
+                documents.forEach( document => {
+                    if(documentMap[document.document.documentId] == undefined){
+                        tempResult[collection].push(document);
+                        documentMap[document.document.documentId] = 1
+                    }
+                })
+                
+            }
         })
 
 
@@ -161,7 +176,16 @@ class foxql {
         })
 
         setTimeout(() => {
-            callback(results)
+
+            for(let collection in tempResult) {
+                let documents = tempResult[collection];
+
+                documents.sort((a,b)=>{
+                    return b.score - a.score;
+                });
+            }
+
+            callback(tempResult)
             delete this.peer.peerEvents[generatedListenerName]
         }, timeOut);
     }
