@@ -108,3 +108,7 @@ foxql.randomDocument({
 });
 ```
 
+#### Close spesific peer datachannel and webrtc object
+``` javascript
+foxql.dropPeer('peerID');
+```
