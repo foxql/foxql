@@ -94,3 +94,14 @@ client.use('storageOptions', {
 
 
 ```
+
+#### Get random documents on active connection
+``` javascript
+foxql.randomDocument({
+    limit : 2,
+    collection : 'entrys',
+    timeOut : 300
+},(documents)=>{
+    console.log(documents)
+});
+```

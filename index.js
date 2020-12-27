@@ -190,6 +190,33 @@ class foxql {
         }, timeOut);
     }
 
+    randomDocument({limit, collection, timeOut}, callback)
+    {
+        const generatedListenerName = this.randomString()
+
+        this.peer.broadcast({
+            listener : 'onRandom',
+            data : {
+                limit : limit,
+                collection : collection,
+                listener : generatedListenerName
+            }
+        });
+
+        let results = [];
+
+        this.peer.onPeer(generatedListenerName, async (body)=> {
+            results = results.concat(body.results);
+        });
+
+        setTimeout(()=> {
+            callback(results);
+            delete this.peer.peerEvents[generatedListenerName]
+        }, timeOut);
+        
+
+    }
+
 }
 
 
