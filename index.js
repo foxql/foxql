@@ -1,35 +1,30 @@
-import index from "@foxql/foxql-index"
+import foxqlIndex from "@foxql/foxql-index"
 import peer from "@foxql/foxql-peer"
 import storage from "./core/storage.js";
 import events from './events.js';
 
+import nativeCollections from './collections.js';
+
 
 class foxql {
     constructor(){
-        
-        this.indexOptions = {
-            fields : [
-                'title',
-                'content'
-            ],
-            ref : 'documentId'
-        }
     
         this.storageOptions = {
             name : 'foxql-storage',
             interval : 100,
             saveInterval : false 
         }
+
+        this.currentCollections = [];
     
         this.useAvaliableObjects = [
             'serverOptions',
-            'indexOptions',
             'storageOptions'
         ]
     
-        this.indexSaveProcessing = false
+        this.databaseSaveProcessing = false
 
-        this.indexs = new index(); 
+        this.database = new foxqlIndex(); 
         this.peer = new peer();
     }
 
@@ -40,18 +35,22 @@ class foxql {
         }
     }
 
+    openNativeCollections()
+    {
+        nativeCollections.forEach(collection => {
+            this.database.pushCollection(collection);
+            const collectionName = collection.collectionName;
+            this.currentCollections.push(collectionName);
+
+            this.database.useCollection(collectionName).registerAnalyzer('tokenizer', (string)=>{
+                return string.toLowerCase().replace(/[^\w\s]/gi, ' ').replace(/  +/g, ' ').trim();
+            });
+        })
+    }
+
     open()
     {
-
         const saveInterval = this.storageOptions.saveInterval || false;
-
-        
-        this.indexs.addField(
-            this.indexOptions.fields
-        )
-        this.indexs.setRef(
-            this.indexOptions.ref
-        )
 
         if(saveInterval) {
             this.storage = new storage(
@@ -60,12 +59,6 @@ class foxql {
 
             this.loadDumpOnStorage();
         }
-
-        this.indexs.registerAnalyzer('tokenizer', (string)=>{
-            return string.toLowerCase().replace(/  +/g, ' ').trim();
-        }); 
-
-        delete this.indexOptions
 
         if(saveInterval) {
             this.indexDatabaseLoop();
@@ -78,8 +71,8 @@ class foxql {
         const dump = this.storage.get();
         if(dump && typeof dump === 'string') {
             try {
-                this.indexs.import(
-                    dump
+                this.database.import(
+                    JSON.parse(dump)
                 );
             }catch(e)
             {
@@ -91,15 +84,19 @@ class foxql {
     indexDatabaseLoop()
     {
         setInterval(()=>{
-            if(this.indexs.waitingSave && !this.indexSaveProcessing){
-                this.indexSaveProcessing = true;
 
-                const dump = this.indexs.export();
-                this.storage.set(dump);
-
-                this.indexSaveProcessing = false;
-                this.indexs.waitingSave = false;
-            }
+            this.currentCollections.forEach(collection => {
+                const targetCollection = this.database.collections[collection];
+                if(targetCollection.waitingSave && !this.databaseSaveProcessing){
+                    this.databaseSaveProcessing = true;
+    
+                    const dump = this.database.export();
+                    this.storage.set(JSON.stringify(dump));
+    
+                    this.databaseSaveProcessing = false;
+                    targetCollection.waitingSave = false;
+                }  
+            })
         }, this.storageOptions.interval);
     }
 
@@ -115,10 +112,17 @@ class foxql {
     }
 
 
-    publishDocument(document){
+    publishDocument(document, collection)
+    {
+        if(typeof collection !== 'string') return false;
+        if(!this.currentCollections.includes(collection)) return false;
+
         this.peer.broadcast({
             listener : 'onDocument',
-            data : document
+            data : {
+                document : document,
+                collection : collection
+            }
         });
     }   
 
@@ -127,28 +131,42 @@ class foxql {
         return Math.random().toString(36).substring(0,30).replace(/\./gi, '');
     }
 
-    search({query, timeOut}, callback)
+    search({query, timeOut, collections}, callback)
     {
-        let results = [];
-        let resultsMap = {}
+        let tempResult = {};
+        let documentMap = {}
+
+        if(collections == undefined) {
+            collections = this.currentCollections;
+        }
 
         const generatedListenerName = this.randomString()
 
         const body = {
             listener : generatedListenerName,
-            query : query
+            query : query,
+            collections : collections
         };
 
         this.peer.onPeer(generatedListenerName,async (data)=> {
-            const peerResuls = data.results || [];
-            if(peerResuls <= 0) return;
+            const peerResuls = data.results;
 
-            peerResuls.forEach(document => {
-                if(resultsMap[document.documentId] == undefined){
-                    results.push(document);
-                    resultsMap[document.documentId] = 1
+            for(let collection in peerResuls) {
+                if(tempResult[collection] === undefined) {
+                    tempResult[collection] = [];
                 }
-            })
+
+                const documents = peerResuls[collection];
+
+
+                documents.forEach( document => {
+                    if(documentMap[document.document.documentId] == undefined){
+                        tempResult[collection].push(document);
+                        documentMap[document.document.documentId] = 1
+                    }
+                })
+                
+            }
         })
 
 
@@ -158,9 +176,45 @@ class foxql {
         })
 
         setTimeout(() => {
-                callback(results)
-                delete this.peer.peerEvents['test-search']
+
+            for(let collection in tempResult) {
+                let documents = tempResult[collection];
+
+                documents.sort((a,b)=>{
+                    return b.score - a.score;
+                });
+            }
+
+            callback(tempResult)
+            delete this.peer.peerEvents[generatedListenerName]
         }, timeOut);
+    }
+
+    randomDocument({limit, collection, timeOut}, callback)
+    {
+        const generatedListenerName = this.randomString()
+
+        this.peer.broadcast({
+            listener : 'onRandom',
+            data : {
+                limit : limit,
+                collection : collection,
+                listener : generatedListenerName
+            }
+        });
+
+        let results = [];
+
+        this.peer.onPeer(generatedListenerName, async (body)=> {
+            results = results.concat(body.results);
+        });
+
+        setTimeout(()=> {
+            callback(results);
+            delete this.peer.peerEvents[generatedListenerName]
+        }, timeOut);
+        
+
     }
 
 }

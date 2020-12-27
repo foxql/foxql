@@ -53,7 +53,8 @@ client.open();
 ``` javascript
 client.pushEvents([
     'onDocument',
-    'onSearch'
+    'onSearch',
+    'onRandom'
 ])
 ```
 
@@ -71,6 +72,17 @@ async function callback(results)
 }
 ```
 
+#### Publish document on active peers
+
+``` javascript
+client.publishDocument({
+    content : 'published test document content',
+    title : 'published!',
+    documentId : '10239129381'
+}, 'entrys');
+
+```
+
 #### Storage Setup
 
 ``` javascript
@@ -82,3 +94,17 @@ client.use('storageOptions', {
 
 
 ```
+
+
+
+#### Get random documents on active connection
+``` javascript
+foxql.randomDocument({
+    limit : 2,
+    collection : 'entrys',
+    timeOut : 300
+},(documents)=>{
+    console.log(documents)
+});
+```
+
