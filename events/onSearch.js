@@ -3,14 +3,21 @@ const name = 'onSearch';
 
 async function listener(data)
 { 
-    const results = this.indexs.search(data.query)
+    const targetCollections = data.collections;
+
+    let resultMap = {};
+
+    targetCollections.forEach( collection => {
+        const findCollection = this.database.useCollection(collection);
+        resultMap[collection] = findCollection.search(data.query)
+    });
+
     const to = data._by;
-    if(results.length <= 0) {return}
 
     this.peer.send(to, {
         listener : data.listener,
         data :{
-            results : results
+            results : resultMap
         }
     });
 }
