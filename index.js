@@ -112,10 +112,17 @@ class foxql {
     }
 
 
-    publishDocument(document){
+    publishDocument(document, collection)
+    {
+        if(typeof collection !== 'string') return false;
+        if(!this.currentCollections.includes(collection)) return false;
+
         this.peer.broadcast({
             listener : 'onDocument',
-            data : document
+            data : {
+                document : document,
+                collection : collection
+            }
         });
     }   
 

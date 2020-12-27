@@ -1,10 +1,12 @@
 const name = 'onDocument';
 
 
-async function listener(document)
+async function listener(data)
 { 
-    this.indexs.addDoc(
-        document
+    const collection = data.collection;
+
+    this.database.useCollection(collection).addDoc(
+        data.document
     )
 }
 
