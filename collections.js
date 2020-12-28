@@ -20,6 +20,9 @@ export default [
                 required : true
             },
             documentId : {
+                createField : ['title']
+            },
+            documentSubId : {
                 createField : ['title', 'content']
             }   
         }
@@ -60,6 +63,9 @@ export default [
             },
             documentId : {
                 createField : ['url']
+            },
+            documentSubId : {
+                createField : ['domain']
             }   
         }
     }
