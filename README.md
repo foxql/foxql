@@ -61,13 +61,12 @@ client.pushEvents([
 #### Search on active peers
 
 ``` javascript
-client.search({
-    query : 'example query',
-    timeOut : 300
-}, callback);
+async function query() {
+    const results = await client.search({
+        query : 'example query',
+        timeOut : 300
+    });
 
-async function callback(results)
-{
     console.log(results);
 }
 ```
