@@ -131,10 +131,11 @@ class foxql {
         return Math.random().toString(36).substring(0,30).replace(/\./gi, '');
     }
 
-    search({query, timeOut, collections}, callback)
+    async search({query, timeOut, collections})
     {
         let tempResult = {};
         let documentMap = {}
+        let resultCount = 0;
 
         if(collections == undefined) {
             collections = this.currentCollections;
@@ -157,7 +158,7 @@ class foxql {
                 }
 
                 const documents = peerResuls[collection];
-
+                resultCount+= documents.length;
 
                 documents.forEach( document => {
                     if(documentMap[document.document.documentId] == undefined){
@@ -175,19 +176,23 @@ class foxql {
             data : body
         })
 
-        setTimeout(() => {
+        return new Promise((resolve, reject)=>{
+            setTimeout(() => {
 
-            for(let collection in tempResult) {
-                let documents = tempResult[collection];
-
-                documents.sort((a,b)=>{
-                    return b.score - a.score;
-                });
-            }
-
-            callback(tempResult)
-            delete this.peer.peerEvents[generatedListenerName]
-        }, timeOut);
+                for(let collection in tempResult) {
+                    let documents = tempResult[collection];
+    
+                    documents.sort((a,b)=>{
+                        return b.score - a.score;
+                    });
+                }
+                delete this.peer.peerEvents[generatedListenerName]
+                resolve({
+                    results : tempResult,
+                    count : resultCount
+                })
+            }, timeOut);
+        });
     }
 
     randomDocument({limit, collection, timeOut}, callback)

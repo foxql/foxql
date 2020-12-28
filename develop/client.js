@@ -15,6 +15,14 @@ client.use('storageOptions', {
     saveInterval : true
 });
 
+async function search()
+{
+    const results = await client.search('test')
+    console.log(results)
+}
+
+search();
+
 client.open();
 
 window.foxql = client;
