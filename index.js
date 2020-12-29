@@ -133,7 +133,7 @@ class foxql {
 
     async search({query, timeOut, collections})
     {
-        let tempResult = {};
+        let tempResult = [];
         let documentMap = {}
         let resultCount = 0;
 
@@ -153,17 +153,15 @@ class foxql {
             const peerResuls = data.results;
 
             for(let collection in peerResuls) {
-                if(tempResult[collection] === undefined) {
-                    tempResult[collection] = [];
-                }
 
                 const documents = peerResuls[collection];
                 resultCount+= documents.length;
 
                 documents.forEach( document => {
                     if(documentMap[document.document.documentId] == undefined){
-                        tempResult[collection].push(document);
-                        documentMap[document.document.documentId] = 1
+                        document._collection = collection;
+                        tempResult.push(document);
+                        documentMap[document.document.documentId] = 1;
                     }
                 })
                 
@@ -179,13 +177,10 @@ class foxql {
         return new Promise((resolve, reject)=>{
             setTimeout(() => {
 
-                for(let collection in tempResult) {
-                    let documents = tempResult[collection];
-    
-                    documents.sort((a,b)=>{
-                        return b.score - a.score;
-                    });
-                }
+                tempResult.sort((a,b)=>{
+                    return b.document.score - a.document.score;
+                });
+
                 delete this.peer.peerEvents[generatedListenerName]
                 resolve({
                     results : tempResult,

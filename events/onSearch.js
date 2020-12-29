@@ -11,6 +11,11 @@ const name = 'onSearch';
 
 async function listener(data)
 { 
+
+    if(data.query === undefined) {
+        return;
+    }
+
     const by = data._by;
     eventMiddleware.up(by);
     const status = eventMiddleware.status(by);
