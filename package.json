@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "parcel develop/index.html",
-    "build": "parcel build ./index.js --global foxql --no-source-maps -o foxql.min.js"
+    "build": "parcel build ./globalVariable.js --global foxql --no-source-maps -o foxql.min.js -d build"
   },
   "author": "Bora Erdinç Özer",
   "license": "ISC",
