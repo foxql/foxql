@@ -17,11 +17,15 @@ client.use('storageOptions', {
 
 async function search()
 {
-    const results = await client.search('test')
+    const results = await client.search({
+        query : 'test',
+        timeOut: 300
+    })
     console.log(results)
 }
-
-search();
+setTimeout(()=>{
+    search();
+}, 2000);
 
 client.open();
 
