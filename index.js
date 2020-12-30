@@ -64,6 +64,8 @@ class foxql {
             this.indexDatabaseLoop();
         }
 
+        this.peer.open();
+
     }
 
     loadDumpOnStorage()
