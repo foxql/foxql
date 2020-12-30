@@ -2,7 +2,7 @@
 Peer to peer full text search engine that runs on your browser. 
 We're developing FoxQL for bring freedom to internet and make you anonymous
 
-### Active Sub Projects
+## Active Sub Projects
 | Project Name  |  Github | Npm |
 | ------------ | ------------ |--------- |
 | Foxql-index  | [Repo](https://github.com/boraozer/foxql-index "Repo")   | [Npm](https://cutt.ly/JhNPhum "Npm") |
@@ -11,45 +11,41 @@ We're developing FoxQL for bring freedom to internet and make you anonymous
 |Foxql-frontend | [Repo](https://github.com/boraozer/foxql-frontend "Repo") | [Npm](# "Npm") |
 |Foxql-crawler | [Repo](https://github.com/boraozer/foxql-crawler "Repo") | [Npm](# "Npm") |
 
-[Public Trello](https://trello.com/b/rkbH49p7/foxql "Public Trello")
+## Install
 
-### Documentation
-
-#### Install
+Use global variable
 ```
-npm i foxql
+<script src = "https://cdn.jsdelivr.net/npm/foxql/build/foxql.min.js"></script>
 ```
 
 ``` javascript
-import foxql from 'foxql';
-
-const client = new foxql();
-
+const client = new foxql.client();
 client.open();
 ```
 
-#### Change Configuration
+or
+```
+npm install foxql
+```
+
 
 ``` javascript
 import foxql from 'foxql';
-
 const client = new foxql();
-
-client.use('indexOptions', {
-    fields : [
-        'title',
-        'content',
-        'image',
-        'url'
-    ],
-    ref : 'documentId'
-});
-
 client.open();
 ```
 
+## Documentation
 
-#### How to listen native events
+
+#### Native Listeners
+| Listener Name  |  What is |
+| ------------ | ------------ |
+| onDocument | if dedected a new document, you database copying this document  |
+| onSearch | if dedected new search query, search your own databasess and send results |
+| onRandom | find random document on your database and send them all |
+
+#### Hot to open native listeners
 
 ``` javascript
 client.pushEvents([
@@ -59,7 +55,7 @@ client.pushEvents([
 ])
 ```
 
-#### Search on active peers
+#### Search on active connections
 
 ``` javascript
 async function query() {
