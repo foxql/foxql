@@ -11,11 +11,9 @@ const name = 'onSearch';
 
 async function listener(data)
 { 
-
     if(data.query === undefined) {
-        return;
+        return true;
     }
-
     const by = data._by;
     eventMiddleware.up(by);
     const status = eventMiddleware.status(by);
@@ -30,11 +28,18 @@ async function listener(data)
     const targetCollections = data.collections;
 
     let resultMap = {};
+    let count = 0;
 
     targetCollections.forEach( collection => {
         const findCollection = this.database.useCollection(collection);
         resultMap[collection] = findCollection.search(data.query)
+        count += resultMap[collection].length;
     });
+    
+    if(data._simulate) {
+        return count > 0;
+    }
+
 
     this.peer.send(by, {
         listener : data.listener,

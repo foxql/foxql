@@ -19,13 +19,13 @@ async function search()
 {
     const results = await client.search({
         query : 'test',
-        timeOut: 300
+        timeOut: 100
     })
     console.log(results)
 }
 setTimeout(()=>{
     search();
-}, 2000);
+}, 300);
 
 client.open();
 

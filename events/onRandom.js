@@ -10,6 +10,8 @@ const name = 'onRandom';
 
 async function listener(data)
 { 
+    if(data._simulate) return true;
+    
     const by = data._by;
     eventMiddleware.up(by);
     const status = eventMiddleware.status(by);

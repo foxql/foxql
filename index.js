@@ -151,9 +151,13 @@ class foxql {
             collections : collections
         };
 
+        this.peer.broadcast({
+            listener : 'onSearch',
+            data : body
+        })
+
         this.peer.onPeer(generatedListenerName,async (data)=> {
             const peerResuls = data.results;
-
             for(let collection in peerResuls) {
 
                 const documents = peerResuls[collection];
@@ -170,12 +174,6 @@ class foxql {
             }
         })
 
-
-        this.peer.broadcast({
-            listener : 'onSearch',
-            data : body
-        })
-
         return new Promise((resolve, reject)=>{
             setTimeout(() => {
 
@@ -188,7 +186,7 @@ class foxql {
                     results : tempResult,
                     count : resultCount
                 })
-            }, timeOut);
+            }, (timeOut + 1000) );
         });
     }
 

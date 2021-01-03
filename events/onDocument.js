@@ -10,6 +10,11 @@ const name = 'onDocument';
 
 async function listener(data)
 { 
+
+    if(data._simulate) {
+        return true;
+    }
+
     const by = data._by || false;
 
     if(!by) return;
