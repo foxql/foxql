@@ -2,19 +2,14 @@ import middleware from '../core/middleware.js';
 
 const eventMiddleware = new middleware({
     timeout : 1000, // miliseconds
-    warningLimit : 1
+    warningLimit : 3
 });
 
-const name = 'onDocument';
+const name = 'onDocumentByRef';
 
 
 async function listener(data)
 { 
-
-    if(data._simulate) {
-        return true;
-    }
-
     const by = data._by || false;
 
     if(!by) return;
@@ -30,11 +25,24 @@ async function listener(data)
         return;
     }
 
-    const collection = data.collection;
 
-    this.database.useCollection(collection).addDoc(
-        data.document
-    )
+    const collection = data.collection;
+    const id = data.ref || '';
+
+    const doc = this.database.useCollection(collection).getDoc(id);
+
+    if(data._simulate && doc) {
+        return true;
+    }
+
+    this.peer.send(by, {
+        listener : data.listener,
+        data :{
+            document : doc
+        }
+    });
+
+
 }
 
 export default {
