@@ -2,6 +2,7 @@ import foxqlIndex from "@foxql/foxql-index"
 import peer from "@foxql/foxql-peer"
 import storage from "./core/storage.js";
 import events from './events.js';
+import tokenization from './core/tokenization.js';
 
 import nativeCollections from './collections.js';
 
@@ -42,18 +43,7 @@ class foxql {
             const collectionName = collection.collectionName;
             this.currentCollections.push(collectionName);
 
-            this.database.useCollection(collectionName).registerAnalyzer('tokenizer', (string)=>{
-                return string.toLowerCase().
-                replace(/ö/gi, 'o').
-                replace(/ç/gi, 'c').
-                replace(/ş/gi, 's').
-                replace(/ğ/gi, 'g').
-                replace(/ü/gi, 'u').
-                replace(/ı/gi, 'i').
-                replace(/[^\w\s]/gi, ' ').
-                replace(/  +/g, ' ').
-                trim();
-            });
+            this.database.useCollection(collectionName).registerAnalyzer('tokenizer', tokenization);
         })
     }
 
@@ -85,6 +75,11 @@ class foxql {
                 this.database.import(
                     JSON.parse(dump)
                 );
+
+                nativeCollections.forEach(collection => {
+                    const collectionName = collection.collectionName;
+                    this.database.useCollection(collectionName).registerAnalyzer('tokenizer', tokenization);
+                })
             }catch(e)
             {
                 throw Error(e);

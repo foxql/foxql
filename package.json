@@ -1,6 +1,6 @@
 {
   "name": "foxql",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Peer to peer full text search engine running in your browser. We building for anonymous and freedom internet.",
   "main": "index.js",
   "scripts": {
