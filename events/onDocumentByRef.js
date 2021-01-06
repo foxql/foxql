@@ -35,13 +35,17 @@ async function listener(data)
         return true;
     }
 
-    this.peer.send(by, {
-        listener : data.listener,
-        data :{
-            document : doc
-        }
-    });
+    if(doc) {
+        this.peer.send(by, {
+            listener : data.listener,
+            data :{
+                document : doc
+            }
+        });
 
+    }
+
+    
 
 }
 

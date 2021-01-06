@@ -5,7 +5,8 @@ const client = new foxql();
 client.pushEvents([
     'onDocument',
     'onSearch',
-    'onRandom'
+    'onRandom',
+    'onDocumentByRef'
 ])
 
 client.openNativeCollections();

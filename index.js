@@ -190,7 +190,7 @@ class foxql {
                     results : tempResult,
                     count : resultCount
                 })
-            }, (timeOut + 1000) );
+            }, (timeOut + 500) );
         });
     }
 
@@ -219,6 +219,35 @@ class foxql {
         }, timeOut);
         
 
+    }
+
+    async findDocument({collection, ref, timeOut})
+    {
+        const generatedListenerName = this.randomString()
+
+        let documentPool = [];
+
+        this.peer.onPeer(generatedListenerName, async (body)=> {
+            documentPool.push(body.document);
+        });
+
+        this.peer.broadcast({
+            listener : 'onDocumentByRef',
+            data : {
+                listener : generatedListenerName,
+                ref : ref,
+                collection : collection
+            }
+        });
+
+        return new Promise((resolve)=>{
+            
+            setTimeout(()=> {
+                resolve(documentPool);
+                delete this.peer.peerEvents[generatedListenerName]
+            }, timeOut);
+
+        });
     }
 
     dropPeer(id)
