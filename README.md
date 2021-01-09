@@ -16,7 +16,7 @@ We're developing FoxQL for bring freedom to internet and make you anonymous
 
 Use global variable
 ```
-<script src = "https://cdn.jsdelivr.net/npm/foxql/build/foxql.min.js"></script>
+<script src = "https://cdn.jsdelivr.net/npm/foxql@latest/build/foxql.min.js"></script>
 ```
 
 ``` javascript
