@@ -91,7 +91,6 @@ class foxql {
                 if(collection.documentLength > targetLength) {
                     const lastDocumentRef = Object.keys(collection.documents).pop();
                     collection.deleteDoc(lastDocumentRef);
-                    console.log(collection)
                 }
             });
         }, options.interval);
