@@ -16,6 +16,21 @@ client.use('storageOptions', {
     saveInterval : true
 });
 
+client.use('documentLengthInterval', {
+    active : true,
+    interval : 1000,
+    maxDocumentsInCollections : [
+        {
+            collection : 'entrys',
+            maxDocument : 1
+        },
+        {
+            collection : 'webPage',
+            maxDocument : 100
+        }
+    ]
+});
+
 async function search()
 {
     const results = await client.search({

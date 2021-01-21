@@ -109,3 +109,23 @@ foxql.randomDocument({
 ``` javascript
 foxql.dropPeer('peerID');
 ```
+
+
+#### Set storage max document count
+```javascript
+
+client.use('documentLengthInterval', {
+    active : true,
+    interval : 1000,
+    maxDocumentsInCollections : [
+        {
+            collection : 'entrys',
+            maxDocument : 1
+        },
+        {
+            collection : 'webPage',
+            maxDocument : 100
+        }
+    ]
+});
+```

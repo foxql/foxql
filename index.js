@@ -17,10 +17,17 @@ class foxql {
         }
 
         this.currentCollections = [];
+        
+        this.documentLengthInterval = {
+            active : false,
+            ms : 500,
+            maxDocumentLength : 100
+        };
     
         this.useAvaliableObjects = [
             'serverOptions',
-            'storageOptions'
+            'storageOptions',
+            'documentLengthInterval'
         ]
     
         this.databaseSaveProcessing = false
@@ -62,9 +69,32 @@ class foxql {
         if(saveInterval) {
             this.indexDatabaseLoop();
         }
+        
+        if(this.documentLengthInterval.active) {
+            this.deleteDatabaseLoop();
+        }
 
         this.peer.open();
 
+    }
+
+    deleteDatabaseLoop()
+    {
+        const options = this.documentLengthInterval;
+
+        setInterval(()=>{
+            options.maxDocumentsInCollections.forEach(collectionOptions => {
+                const targetCollection = collectionOptions.collection;
+                const targetLength = collectionOptions.maxDocument;
+                
+                const collection = this.database.useCollection(targetCollection);
+                if(collection.documentLength > targetLength) {
+                    const lastDocumentRef = Object.keys(collection.documents).pop();
+                    collection.deleteDoc(lastDocumentRef);
+                    console.log(collection)
+                }
+            });
+        }, options.interval);
     }
 
     loadDumpOnStorage()
