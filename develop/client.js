@@ -34,14 +34,12 @@ client.use('documentLengthInterval', {
 async function search()
 {
     const results = await client.search({
-        query : 'test',
-        timeOut: 100
+        query : 'foxql',
+        timeOut: 0
     })
     console.log(results)
 }
-setTimeout(()=>{
-    search();
-}, 300);
+search();
 
 client.open();
 

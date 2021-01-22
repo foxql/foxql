@@ -152,7 +152,7 @@ class foxql {
         if(typeof collection !== 'string') return false;
         if(!this.currentCollections.includes(collection)) return false;
 
-        this.peer.broadcast({
+        await this.peer.broadcast({
             listener : 'onDocument',
             data : {
                 document : document,
@@ -184,7 +184,7 @@ class foxql {
             collections : collections
         };
 
-        this.peer.broadcast({
+        await this.peer.broadcast({
             listener : 'onSearch',
             data : body
         })
@@ -227,7 +227,7 @@ class foxql {
     {
         const generatedListenerName = this.randomString()
 
-        this.peer.broadcast({
+        await this.peer.broadcast({
             listener : 'onRandom',
             data : {
                 limit : limit,
@@ -260,7 +260,7 @@ class foxql {
             documentPool.push(body.document);
         });
 
-        this.peer.broadcast({
+        await this.peer.broadcast({
             listener : 'onDocumentByRef',
             data : {
                 listener : generatedListenerName,
