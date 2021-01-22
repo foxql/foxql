@@ -147,7 +147,7 @@ class foxql {
     }
 
 
-    publishDocument(document, collection)
+    async publishDocument(document, collection)
     {
         if(typeof collection !== 'string') return false;
         if(!this.currentCollections.includes(collection)) return false;
@@ -223,7 +223,7 @@ class foxql {
         });
     }
 
-    randomDocument({limit, collection, timeOut}, callback)
+    async randomDocument({limit, collection, timeOut}, callback)
     {
         const generatedListenerName = this.randomString()
 
