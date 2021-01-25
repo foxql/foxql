@@ -20,10 +20,10 @@ export default [
                 required : true
             },
             documentId : {
-                createField : ['title']
+                createField : ['title', 'content']
             },
             documentSubId : {
-                createField : ['title', 'content']
+                createField : ['title']
             }   
         }
     },
