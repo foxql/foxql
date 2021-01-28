@@ -1,5 +1,4 @@
 # FoxQL
-![#](https://i.imgyukle.com/2020/12/30/aXwaPA.png)
 Peer to peer full text search engine that runs on your browser. 
 We're developing FoxQL for bring freedom to internet and make you anonymous
 
