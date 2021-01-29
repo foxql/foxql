@@ -250,14 +250,17 @@ class foxql {
 
     }
 
-    async findDocument({collection, ref, timeOut})
+    async findDocument({collection, ref, timeOut, match})
     {
         const generatedListenerName = this.randomString()
 
         let documentPool = [];
 
         this.peer.onPeer(generatedListenerName, async (body)=> {
-            documentPool.push(body.document);
+            let results = body.results;
+            if(results.length > 0){
+                documentPool = documentPool.concat(results)
+            }
         });
 
         await this.peer.broadcast({
@@ -265,7 +268,8 @@ class foxql {
             data : {
                 listener : generatedListenerName,
                 ref : ref,
-                collection : collection
+                collection : collection,
+                match : match || false
             }
         });
 

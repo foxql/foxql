@@ -13,7 +13,7 @@ client.openNativeCollections();
 
 
 client.use('storageOptions', {
-    saveInterval : true
+    saveInterval : false
 });
 
 client.use('documentLengthInterval', {
@@ -22,7 +22,7 @@ client.use('documentLengthInterval', {
     maxDocumentsInCollections : [
         {
             collection : 'entrys',
-            maxDocument : 1
+            maxDocument : 30
         },
         {
             collection : 'webPage',
@@ -31,16 +31,16 @@ client.use('documentLengthInterval', {
     ]
 });
 
-async function search()
-{
-    const results = await client.search({
-        query : 'foxql',
-        timeOut: 0
-    })
-    console.log(results)
-}
-search();
-
 client.open();
+
+client.database.useCollection('entrys').addDoc({
+    title : 'foxql',
+    content : 'foxql contenta3'
+});
+
+client.database.useCollection('entrys').addDoc({
+    title : 'foxql',
+    content : 'foxql contenta123123'
+});
 
 window.foxql = client;

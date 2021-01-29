@@ -29,7 +29,40 @@ async function listener(data)
     const collection = data.collection;
     const id = data.ref || '';
 
-    const doc = this.database.useCollection(collection).getDoc(id);
+    const targetIndex = this.database.useCollection(collection)
+
+    let results = [];
+
+    const doc = targetIndex.getDoc(id);
+
+    if(doc){
+        results.push(doc);
+    }
+
+    const match = data.match || false; 
+
+    if(match) {
+        
+        const targetField = match.field || '';
+        const findDocumentMatchingValue = doc[targetField] || false;
+
+        const findMatchingIndex = targetIndex.indexs[targetField] || false;
+
+        if(findMatchingIndex && findDocumentMatchingValue) {
+            Object.keys(findMatchingIndex[findDocumentMatchingValue]).forEach((ref)=>{
+                if(ref != doc[targetIndex.ref]){
+                    results.push(
+                        targetIndex.getDoc(ref)
+                    );
+                }
+            })
+        }
+
+
+
+
+    }
+
 
     if(data._simulate && doc) {
         return true;
@@ -39,7 +72,7 @@ async function listener(data)
         this.peer.send(by, {
             listener : data.listener,
             data :{
-                document : doc
+                results : results,
             }
         });
 

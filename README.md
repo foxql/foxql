@@ -128,3 +128,25 @@ client.use('documentLengthInterval', {
     ]
 });
 ```
+
+#### Find Document by ref
+``` javascript
+let documents = await foxql.findDocument({  
+    ref : '7d5bb20bd09fec363bb6cabde4eea1150940edd4a0d4a29f25f17757ffe47a68',
+    collection : 'entrys',
+    timeOut : 500
+});
+```
+
+#### Find document by ref and use match spesific field.
+``` javascript
+let documents = await foxql.findDocument({  
+    ref : '7d5bb20bd09fec363bb6cabde4eea1150940edd4a0d4a29f25f17757ffe47a68',
+    collection : 'entrys',
+    timeOut : 500,
+    match : {
+        field : 'entryKey',
+        value : 'parent-key'
+    }
+});
+```

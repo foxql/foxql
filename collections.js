@@ -3,7 +3,8 @@ export default [
         collectionName : 'entrys',
         fields : [
             'title',
-            'content'
+            'content',
+            'entryKey'
         ],
         ref : 'documentId',
         schema : {
@@ -22,7 +23,7 @@ export default [
             documentId : {
                 createField : ['title', 'content']
             },
-            documentSubId : {
+            entryKey : {
                 createField : ['title']
             }   
         }
