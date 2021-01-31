@@ -2,6 +2,11 @@
 Peer to peer full text search engine that runs on your browser. 
 We're developing FoxQL for bring freedom to internet and make you anonymous
 
+## How It Work
+[![](https://i.hizliresim.com/BZyAfp.png)](#)
+
+
+
 ## Active Sub Projects
 | Project Name  |  Github | Npm |
 | ------------ | ------------ |--------- |
