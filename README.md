@@ -2,7 +2,7 @@
 Peer to peer full text search engine that runs on your browser. 
 We're developing FoxQL for bring freedom to internet and make you anonymous
 
-[Documentation](http://asdasdasd "Documentation")
+[Documentation](https://boraozer.github.io/foxql "Documentation")
 
 ## Active Sub Projects
 | Project Name  |  Github | Npm |
