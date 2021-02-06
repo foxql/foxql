@@ -23,6 +23,31 @@ const client = new foxql();
 client.open();
 ```
 
+## Crawl Our Web Page
+This example a realtime index your web page and sending other nodes.
+``` javascript
+client.pushEvents([
+    'onSearch'
+])
+
+client.openNativeCollections();
+
+client.open();
+
+const document = {
+    title : document.title,
+    description : document.querySelector('meta[name="description"]').content, // change this selector on your using dom element.
+    url : window.location.href,
+    domain : window.location.hostname
+};
+
+client.database.useCollection('webPage').addDoc(document);
+client.publishDocument(document, 'webPage');
+```
+
+
+
+
 ## Events
 
 ### onDocument
