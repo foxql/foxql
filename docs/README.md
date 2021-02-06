@@ -116,7 +116,7 @@ let documents = await foxql.findDocument({
 });
 ```
 
-#### Match spesific field
+#### Match specific field
 ``` javascript
 let documents = await foxql.findDocument({  
     ref : '7d5bb20bd09fec363bb6cabde4eea1150940edd4a0d4a29f25f17757ffe47a68',
