@@ -1,6 +1,6 @@
 {
   "name": "foxql",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "description": "Peer to peer full text search engine running in your browser. We building for anonymous and freedom internet.",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boraozer/foxql.git"
+    "url": "git+https://github.com/foxql/foxql.git"
   },
   "homepage": "https://foxql.com"
 }
