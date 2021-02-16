@@ -1,4 +1,4 @@
-import middleware from '../core/middleware.js';
+import middleware from '../utils/middleware.js';
 
 const eventMiddleware = new middleware({
     timeout : 1000, // miliseconds

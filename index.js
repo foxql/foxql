@@ -1,10 +1,10 @@
 import foxqlIndex from "@foxql/foxql-index"
 import peer from "@foxql/foxql-peer"
-import storage from "./core/storage.js";
-import events from './events.js';
-import tokenization from './core/tokenization.js';
+import storage from "./src/utils/storage.js";
+import events from './src/events.js';
+import tokenization from './src/utils/tokenization.js';
 
-import nativeCollections from './collections.js';
+import nativeCollections from './src/collections.js';
 
 
 class foxql {

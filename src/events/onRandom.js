@@ -1,4 +1,4 @@
-import middleware from '../core/middleware.js';
+import middleware from '../utils/middleware.js';
 
 const eventMiddleware = new middleware({
     timeout : 1000, // miliseconds
@@ -25,7 +25,7 @@ async function listener(data)
 
     if(data.listener === undefined) return; 
 
-    const limit = data.limit || 3;
+    let limit = data.limit || 3;
     if(limit > 3) {
         limit = 3;
     }
