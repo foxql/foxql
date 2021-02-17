@@ -25,26 +25,25 @@ async function listener(data)
         return;
     }
 
-    const targetCollections = data.collections;
+    const targetCollection = data.collection || false;
 
-    let resultMap = {};
-    let count = 0;
+    if(!targetCollection) {
+        this.dropPeer(by);
+        return;
+    }
 
-    targetCollections.forEach( collection => {
-        const findCollection = this.database.useCollection(collection);
-        resultMap[collection] = findCollection.search(data.query)
-        count += resultMap[collection].length;
-    });
-    
+    const findCollection = this.database.useCollection(targetCollection);
+    let results = findCollection.search(data.query)
+
     if(data._simulate) {
-        return count > 0;
+        return results.length > 0;
     }
 
 
     this.peer.send(by, {
         listener : data.listener,
         data :{
-            results : resultMap
+            results : results
         }
     });
 }
