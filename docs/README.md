@@ -50,16 +50,7 @@ client.publishDocument(document, 'webPage');
 
 ## Events
 
-### onDocument
-Listen all news documents and write database
-### onSearch
-Listen all search query in foxql network
-### onRandom
-Listen random document query
-### onDocumentByRef
-Listen find document by ref querys all network.
-
-#### Open native event listeners
+### FoxQL native event listeners
 
 ``` javascript
 client.pushEvents([
@@ -70,22 +61,91 @@ client.pushEvents([
 ])
 ```
 
-## Emitters
+### Send query package native listeners
 
-### Search in foxql network
+#### Search document foxql network
 
 ``` javascript
 async function query() {
-    const results = await client.search({
-        query : 'example query',
-        timeOut : 300
+
+    const queryObject = {
+        query : 'test',
+        collection : 'entrys'
+    };
+
+    const results = await foxql.sendEvent(queryObject, {
+        timeOut : 1200, // destroy 1.2s listener
+        peerListener : 'onSearch'
     });
 
     console.log(results);
 }
 ```
 
-### Publish a new document
+#### Get random document foxql network
+
+``` javascript
+async function query() {
+
+    const queryObject = {
+        limit : 2,
+        collection : 'entrys'
+    };
+
+    const results = await foxql.sendEvent(queryObject, {
+        timeOut : 1200, // destroy 1.2s listener
+        peerListener : 'onRandom'
+    });
+
+    console.log(results);
+}
+```
+
+#### Find document by ref in foxql network
+
+``` javascript
+async function query() {
+
+    const queryObject = {
+        ref : '642553c0276a72ad6a86d32755e04fd534df17b9497d9118da3ec84780576f2e',
+        collection : 'entrys'
+    };
+
+    const results = await foxql.sendEvent(queryObject, {
+        timeOut : 1200, // destroy 1.2s listener
+        peerListener : 'onDocumentByRef'
+    });
+
+    console.log(results);
+}
+
+```
+
+
+##### Match specific field
+``` javascript
+async function query() {
+
+    const queryObject = {
+        ref : '642553c0276a72ad6a86d32755e04fd534df17b9497d9118da3ec84780576f2e',
+        collection : 'entrys',
+        match : {
+            field : 'entryKey',
+            value : 'parent-key'
+        }
+    };
+
+    const results = await foxql.sendEvent(queryObject, {
+        timeOut : 1000, // destroy 1.2s listener
+        peerListener : 'onDocumentByRef'
+    });
+
+    console.log(results);
+}
+```
+
+
+#### Publish a new document
 
 ``` javascript
 client.publishDocument({
@@ -94,39 +154,6 @@ client.publishDocument({
     documentId : '10239129381'
 }, 'entrys');
 
-```
-
-### Get random document
-``` javascript
-foxql.randomDocument({
-    limit : 2,
-    collection : 'entrys',
-    timeOut : 300
-},(documents)=>{
-    console.log(documents)
-});
-```
-
-### Find document by ref
-``` javascript
-let documents = await foxql.findDocument({  
-    ref : '7d5bb20bd09fec363bb6cabde4eea1150940edd4a0d4a29f25f17757ffe47a68',
-    collection : 'entrys',
-    timeOut : 500
-});
-```
-
-#### Match specific field
-``` javascript
-let documents = await foxql.findDocument({  
-    ref : '7d5bb20bd09fec363bb6cabde4eea1150940edd4a0d4a29f25f17757ffe47a68',
-    collection : 'entrys',
-    timeOut : 500,
-    match : {
-        field : 'entryKey',
-        value : 'parent-key'
-    }
-});
 ```
 
 ## Storage

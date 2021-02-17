@@ -11,7 +11,6 @@ client.pushEvents([
 
 client.openNativeCollections();
 
-
 client.use('storageOptions', {
     saveInterval : false
 });
@@ -34,13 +33,9 @@ client.use('documentLengthInterval', {
 client.open();
 
 client.database.useCollection('entrys').addDoc({
-    title : 'foxql',
-    content : 'foxql contenta3'
-});
-
-client.database.useCollection('entrys').addDoc({
-    title : 'foxql',
-    content : 'foxql contenta123123'
+    title : 'test document',
+    content : 'test için oluşturulmuş bir içerik',
+    createDate : new Date('2021-01-01')
 });
 
 window.foxql = client;
