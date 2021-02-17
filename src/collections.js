@@ -4,8 +4,7 @@ export default [
         fields : [
             'title',
             'content',
-            'entryKey',
-            'createDate'
+            'entryKey'
         ],
         ref : 'documentId',
         schema : {
