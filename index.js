@@ -3,7 +3,7 @@ import peer from "@foxql/foxql-peer"
 import storage from "./src/utils/storage.js";
 import events from './src/events.js';
 import tokenization from './src/utils/tokenization.js';
-
+import consensus from './src/utils/consensus.js';
 import nativeCollections from './src/collections.js';
 
 
@@ -166,121 +166,49 @@ class foxql {
         return Math.random().toString(36).substring(0,30).replace(/\./gi, '');
     }
 
-    async search({query, timeOut, collections})
+    async sendEvent(event, {peerListener, timeOut})
     {
-        let tempResult = [];
-        let documentMap = {}
-        let resultCount = 0;
+        const eventConsensus = new consensus();
+        const eventListenerName = this.randomString();
 
-        if(collections == undefined) {
-            collections = this.currentCollections;
+        event.listener = eventListenerName;
+
+        await this.peer.broadcast({
+            listener : peerListener,
+            data : event
+        });
+
+
+        this.peer.onPeer(eventListenerName, async (data)=> {
+            const peerResuls = data.results || [];
+            const sender = data._by || false;
+            if(peerResuls.length <= 0 || !sender) {
+                return;
+            }
+            eventConsensus.participantsCount += 1;
+
+            peerResuls.forEach(document => {
+                eventConsensus.add(document, sender);
+            });
+        })
+
+        if(timeOut === undefined) {
+            return true;
         }
 
-        const generatedListenerName = this.randomString()
-
-        const body = {
-            listener : generatedListenerName,
-            query : query,
-            collections : collections
-        };
-
-        await this.peer.broadcast({
-            listener : 'onSearch',
-            data : body
-        })
-
-        this.peer.onPeer(generatedListenerName,async (data)=> {
-            const peerResuls = data.results;
-            for(let collection in peerResuls) {
-
-                const documents = peerResuls[collection];
-                resultCount+= documents.length;
-
-                documents.forEach( document => {
-                    if(documentMap[document.document.documentId] == undefined){
-                        document._collection = collection;
-                        tempResult.push(document);
-                        documentMap[document.document.documentId] = 1;
-                    }
-                })
-                
-            }
-        })
-
-        return new Promise((resolve, reject)=>{
-            setTimeout(() => {
-
-                tempResult.sort((a,b)=>{
-                    return b.document.score - a.document.score;
-                });
-
-                delete this.peer.peerEvents[generatedListenerName]
-                resolve({
-                    results : tempResult,
-                    count : resultCount
-                })
-            }, (timeOut + 500) );
-        });
-    }
-
-    async randomDocument({limit, collection, timeOut}, callback)
-    {
-        const generatedListenerName = this.randomString()
-
-        await this.peer.broadcast({
-            listener : 'onRandom',
-            data : {
-                limit : limit,
-                collection : collection,
-                listener : generatedListenerName
-            }
-        });
-
-        let results = [];
-
-        this.peer.onPeer(generatedListenerName, async (body)=> {
-            results = results.concat(body.results);
-        });
-
-        setTimeout(()=> {
-            callback(results);
-            delete this.peer.peerEvents[generatedListenerName]
-        }, timeOut);
-        
-
-    }
-
-    async findDocument({collection, ref, timeOut, match})
-    {
-        const generatedListenerName = this.randomString()
-
-        let documentPool = [];
-
-        this.peer.onPeer(generatedListenerName, async (body)=> {
-            let results = body.results;
-            if(results.length > 0){
-                documentPool = documentPool.concat(results)
-            }
-        });
-
-        await this.peer.broadcast({
-            listener : 'onDocumentByRef',
-            data : {
-                listener : generatedListenerName,
-                ref : ref,
-                collection : collection,
-                match : match || false
-            }
-        });
-
         return new Promise((resolve)=>{
-            
-            setTimeout(()=> {
-                resolve(documentPool);
-                delete this.peer.peerEvents[generatedListenerName]
-            }, timeOut);
+            setTimeout(()=>{
 
+                const results = eventConsensus.results();
+
+                resolve({
+                    count : results.length,
+                    results : results
+                })
+
+            }, timeOut);
         });
+
     }
 
     dropPeer(id)
