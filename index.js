@@ -198,6 +198,7 @@ class foxql {
 
         return new Promise((resolve)=>{
             setTimeout(()=>{
+                delete this.peer.peerEvents[eventListenerName];
 
                 const results = eventConsensus.results();
 
