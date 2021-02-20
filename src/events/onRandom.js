@@ -25,9 +25,9 @@ async function listener(data)
 
     if(data.listener === undefined) return; 
 
-    let limit = data.limit || 3;
-    if(limit > 3) {
-        limit = 3;
+    let limit = data.limit || 10;
+    if(limit > 20) {
+        limit = 20;
     }
 
     const collection = data.collection || '';
