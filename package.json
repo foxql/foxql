@@ -1,7 +1,7 @@
 {
   "name": "foxql",
-  "version": "0.0.56",
-  "description": "Peer to peer full text search engine running in your browser. We building for anonymous and freedom internet.",
+  "version": "0.0.57",
+  "description": "Peer to peer social network running in your browser. We building for anonymous and freedom internet.",
   "main": "index.js",
   "scripts": {
     "dev": "parcel develop/index.html",
@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@foxql/foxql-index": "^1.0.14",
-    "@foxql/foxql-peer": "^1.1.0",
+    "@foxql/foxql-peer": "^1.1.1",
     "hash.js": "^1.1.7"
   },
   "devDependencies": {
