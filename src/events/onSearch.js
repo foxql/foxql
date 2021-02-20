@@ -12,7 +12,7 @@ const name = 'onSearch';
 async function listener(data)
 { 
     if(data.query === undefined) {
-        return true;
+        return false;
     }
     const by = data._by;
     eventMiddleware.up(by);
@@ -22,14 +22,14 @@ async function listener(data)
         if(this.peer.connections[by] !== undefined) {
             this.dropPeer(by);
         }
-        return;
+        return false;
     }
 
     const targetCollection = data.collection || false;
 
     if(!targetCollection) {
         this.dropPeer(by);
-        return;
+        return false;
     }
 
     const findCollection = this.database.useCollection(targetCollection);

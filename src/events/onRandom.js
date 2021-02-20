@@ -9,9 +9,7 @@ const name = 'onRandom';
 
 
 async function listener(data)
-{ 
-    if(data._simulate) return true;
-    
+{   
     const by = data._by;
     eventMiddleware.up(by);
     const status = eventMiddleware.status(by);
@@ -40,6 +38,10 @@ async function listener(data)
     let documentLength = documents.length;
     if(documentLength<=0) return false;
 
+    if(data._simulate) {
+        return true;
+    }
+
     if(documentLength > 100) {
         documents = document.slice(0,100)
         documentLength = 100;
@@ -62,7 +64,6 @@ async function listener(data)
             }
         }
     }
-
     this.peer.send(by, {
         listener : data.listener,
         data :{
