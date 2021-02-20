@@ -178,7 +178,6 @@ class foxql {
             data : event
         });
 
-
         this.peer.onPeer(eventListenerName, async (data)=> {
             const peerResuls = data.results || [];
             const sender = data._by || false;
