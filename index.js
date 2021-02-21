@@ -168,6 +168,7 @@ class foxql {
 
     async sendEvent(event, {peerListener, timeOut})
     {
+        timeOut += this.peer.simulatedListenerDestroyTime;
         const eventConsensus = new consensus();
         const eventListenerName = this.randomString();
 
