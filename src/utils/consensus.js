@@ -85,7 +85,6 @@ class consensus {
     results()
     {
         this.percentParticipants = this.requirementMinParticipantsByDocument;
-
         return Object.values(this.hashMap).filter((item)=>{
 
             return this.calculateDifficulty(item);
