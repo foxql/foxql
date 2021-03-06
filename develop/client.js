@@ -1,13 +1,14 @@
-import foxql from '../index.js';
+import {foxql} from '../index.js';
 
 const client = new foxql();
 
-client.pushEvents([
+client.listenEvents([
     'onDocument',
     'onSearch',
     'onRandom',
     'onDocumentByRef'
 ])
+
 
 client.openNativeCollections();
 
