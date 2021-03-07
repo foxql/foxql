@@ -42,7 +42,7 @@ client.publishDocument(document, 'webPage');
 ### FoxQL native event listeners
 
 ``` javascript
-client.pushEvents([
+client.listenEvents([
     'onDocument',
     'onSearch',
     'onRandom',
