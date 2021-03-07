@@ -1,16 +1,5 @@
 ## Install
 
-### CDN
-
-Use global variable
-```
-<script src = "https://cdn.jsdelivr.net/npm/foxql@latest/build/foxql.min.js"></script>
-```
-
-``` javascript
-const client = new foxql.client();
-client.open();
-```
 ### NPM
 
 ```
@@ -18,7 +7,7 @@ npm install foxql
 ```
 
 ``` javascript
-import foxql from 'foxql';
+import {foxql} from 'foxql';
 const client = new foxql();
 client.open();
 ```
