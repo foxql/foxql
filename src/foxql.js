@@ -171,7 +171,7 @@ class foxql {
         return Math.random().toString(36).substring(0,30).replace(/\./gi, '');
     }
 
-    async sendEvent(event, {peerListener, timeOut})
+    async sendEvent(event, {peerListener, timeOut, documentPool})
     {
         timeOut += this.peer.simulatedListenerDestroyTime;
         const eventConsensus = new consensus();
@@ -183,6 +183,13 @@ class foxql {
             listener : peerListener,
             data : event
         });
+
+        if(Object.prototype.toString.call( documentPool ) === '[object Array]') {      
+            documentPool.forEach(document => {
+                eventConsensus.add(document, this.peer.myPeerId);
+            });
+            eventConsensus.participantsCount += 1;
+        }
 
         this.peer.onPeer(eventListenerName, async (data)=> {
             const peerResults = data.results || [];

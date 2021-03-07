@@ -39,4 +39,22 @@ client.database.useCollection('entrys').addDoc({
     createDate : new Date('2021-01-01')
 });
 
+async function query() {
+
+    const collection = client.database.useCollection('entrys');
+
+    const queryObject = {
+        ref : 'ec59d113d2ef762b40928419323abaaafa64218b70056e51de730731d6192a0e',
+        collection : 'entrys'
+    };
+
+    const results = await client.sendEvent(queryObject, {
+        timeOut : 1200, // destroy 1.2s listener
+        peerListener : 'onDocumentByRef',
+        documentPool : Object.values(collection.documents)
+    });
+
+    console.log(results);
+}
+window.q = query;
 window.foxql = client;
