@@ -1,11 +1,11 @@
 {
   "name": "foxql",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Peer to peer social network running in your browser. We building for anonymous and freedom internet.",
   "main": "index.js",
   "scripts": {
     "dev": "parcel develop/index.html",
-    "build": "parcel build ./globalVariable.js --global foxql --no-source-maps -o foxql.min.js -d build"
+    "build": "parcel build ./index.js --global foxqlClient --no-source-maps -o foxql.min.js -d build"
   },
   "author": "Bora Erdinç Özer",
   "license": "ISC",
