@@ -1,8 +1,20 @@
-# FoxQL
-Peer to peer full text search engine that runs on your browser. 
-We're developing FoxQL for bring freedom to internet and make you anonymous
+# Welcome the FoxQL core!
 
-[Documentation](https://foxql.github.io/foxql "Documentation")
+FoxQL never has scalability issues. It always works cheaply and fast. 
+
+Just visit any foxql project to become a node.
+
+## FoxQL Token(FQL)
+We created FoxQL Token (FQL) so that you can use it within the ecosystem we aim to create. To get tokens, you just need to use FoxQL.
+[Tronscan](https://tronscan.org/#/token20/TTFcDVvQwEhDsPRjsebDZNNw7BA1mZHBu2 "Tronscan")
+
+## Supporting
+
+If you would like to help me develop the project full time, you can visit my patreon page. FoxQL is not for profit.
+[Patreon](https://www.patreon.com/foxql "Patreon")
+
+## Community
+[Telegram](https://t.me/foxql "Telegram")
 
 ### Examples
 
