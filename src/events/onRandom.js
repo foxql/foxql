@@ -43,7 +43,7 @@ async function listener(data)
     }
 
     if(documentLength > 100) {
-        documents = document.slice(0,100)
+        documents = documents.slice(0,100)
         documentLength = 100;
     }
 
