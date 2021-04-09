@@ -5,6 +5,7 @@ FoxQL never has scalability issues. It always works cheaply and fast.
 Just visit any foxql project to become a node.
 
 [Litepaper(TR)](https://github.com/foxql/foxql/wiki/LitePaper-(TR))
+[Litepaper(EN)](https://github.com/foxql/foxql/wiki/LitePaper-(EN))
 
 ## FoxQL Token(FQL)
 We created FoxQL Token (FQL) so that you can use it within the ecosystem we aim to create. To get tokens, you just need to use FoxQL.
