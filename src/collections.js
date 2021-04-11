@@ -10,13 +10,13 @@ export default [
         schema : {
             title : {
                 type : 'string',
-                min : 4,
+                min : 2,
                 max : 80,
                 required : true
             },
             content : {
                 type : 'string',
-                min : 20,
+                min : 1,
                 max : 500,
                 required : true
             },
