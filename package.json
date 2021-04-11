@@ -1,6 +1,6 @@
 {
   "name": "foxql",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Peer to peer social network running in your browser. We building for anonymous and freedom internet.",
   "main": "index.js",
   "scripts": {
