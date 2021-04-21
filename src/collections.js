@@ -36,8 +36,7 @@ export default [
         collectionName : 'comments',
         fields : [
             'entryId',
-            'content',
-            'createDate'
+            'content'
         ],
         ref : 'documentId',
         schema : {
