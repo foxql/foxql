@@ -66,6 +66,7 @@ class foxql {
             this.loadDumpOnStorage();
         }
 
+
         if(saveInterval) {
             this.indexDatabaseLoop();
         }
@@ -101,17 +102,44 @@ class foxql {
         const dump = this.storage.get();
         if(dump && typeof dump === 'string') {
             try {
-                this.database.import(
-                    JSON.parse(dump)
-                );
+                
+                /** TODO - DAHA SONRA BU ALAN KALDIRILACAK. */
+
+                const jsonObject = JSON.parse(dump);
+                for(let collectionName in jsonObject) {
+
+                    if(this.currentCollections.includes(collectionName)) {
+                        
+                        const parseDumpDocuments = Object.values(JSON.parse(jsonObject[collectionName]).documents);
+
+                        const targetCollection = this.database.useCollection(collectionName);
+
+                        parseDumpDocuments.forEach(doc => {
+                            targetCollection.addDoc(doc);
+                        })
+
+                    }
+
+                }
 
                 nativeCollections.forEach(collection => {
                     const collectionName = collection.collectionName;
                     this.database.useCollection(collectionName).registerAnalyzer('tokenizer', tokenization);
                 })
-            }catch(e)
+
+                return true;
+            }catch(e) // dedected new version database dump string.
             {
-                throw Error(e);
+                this.database.import(
+                    dump
+                )
+
+                nativeCollections.forEach(collection => {
+                    const collectionName = collection.collectionName;
+                    this.database.useCollection(collectionName).registerAnalyzer('tokenizer', tokenization);
+                })
+
+                return true;
             }
         }
     }
@@ -126,7 +154,7 @@ class foxql {
                     this.databaseSaveProcessing = true;
     
                     const dump = this.database.export();
-                    this.storage.set(JSON.stringify(dump));
+                    this.storage.set(dump);
     
                     this.databaseSaveProcessing = false;
                     targetCollection.waitingSave = false;

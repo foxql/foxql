@@ -9,11 +9,16 @@ client.listenEvents([
     'onDocumentByRef'
 ])
 
+client.peer.use('socketOptions', {
+    host : '127.0.0.1',
+    port : 3000,
+    protocol : 'http'
+});
 
 client.openNativeCollections();
 
 client.use('storageOptions', {
-    saveInterval : false
+    saveInterval : true
 });
 
 client.use('documentLengthInterval', {
@@ -22,39 +27,11 @@ client.use('documentLengthInterval', {
     maxDocumentsInCollections : [
         {
             collection : 'entrys',
-            maxDocument : 30
-        },
-        {
-            collection : 'webPage',
-            maxDocument : 100
+            maxDocument : 2000
         }
     ]
 });
 
 client.open();
 
-client.database.useCollection('entrys').addDoc({
-    title : 'test document',
-    content : 'test için oluşturulmuş bir içerik',
-    createDate : new Date('2021-01-01')
-});
-
-async function query() {
-
-    const collection = client.database.useCollection('entrys');
-
-    const queryObject = {
-        ref : 'ec59d113d2ef762b40928419323abaaafa64218b70056e51de730731d6192a0e',
-        collection : 'entrys'
-    };
-
-    const results = await client.sendEvent(queryObject, {
-        timeOut : 1200, // destroy 1.2s listener
-        peerListener : 'onDocumentByRef',
-        documentPool : Object.values(collection.documents)
-    });
-
-    console.log(results);
-}
-window.q = query;
 window.foxql = client;
