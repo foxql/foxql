@@ -35,15 +35,18 @@ export default [
     {
         collectionName : 'comments',
         fields : [
-            'documentId',
+            'entryId',
             'content',
             'createDate'
         ],
-        ref : 'commentId',
+        ref : 'documentId',
         schema : {
-            documentId : {
+            entryId : {
                 type : 'string',
                 required : true
+            },
+            documentId : {
+                createField : ['content']
             },
             content : {
                 type : 'string',
