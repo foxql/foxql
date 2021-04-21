@@ -31,5 +31,30 @@ export default [
                 required : true
             }   
         }
+    },
+    {
+        collectionName : 'comments',
+        fields : [
+            'documentId',
+            'content',
+            'createDate'
+        ],
+        ref : 'commentId',
+        schema : {
+            documentId : {
+                type : 'string',
+                required : true
+            },
+            content : {
+                type : 'string',
+                required : true,
+                min : 3,
+                max : 255
+            },
+            createDate : {
+                type : 'date',
+                required : true
+            }   
+        }
     }
 ]
