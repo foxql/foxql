@@ -115,6 +115,7 @@ class foxql {
                         const targetCollection = this.database.useCollection(collectionName);
 
                         parseDumpDocuments.forEach(doc => {
+                            doc.parentDocumentId = null;
                             targetCollection.addDoc(doc);
                         })
 
