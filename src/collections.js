@@ -4,59 +4,34 @@ export default [
         fields : [
             'title',
             'content',
-            'entryKey'
+            'entryKey',
+            'parentDocumentId',
+            'createDate'
         ],
         ref : 'documentId',
         schema : {
             title : {
                 type : 'string',
                 min : 2,
-                max : 80,
-                required : true
+                max : 80
             },
             content : {
                 type : 'string',
                 min : 1,
-                max : 500,
-                required : true
+                max : 500
             },
             documentId : {
-                createField : ['title', 'content']
+                createField : ['title', 'content', 'parentDocumentId']
             },
             entryKey : {
                 createField : ['title']
             },
             createDate : {
-                type : 'date',
-                required : true
-            }   
-        }
-    },
-    {
-        collectionName : 'comments',
-        fields : [
-            'entryId',
-            'content'
-        ],
-        ref : 'documentId',
-        schema : {
-            entryId : {
-                type : 'string',
-                required : true
+                type : 'date'
             },
-            documentId : {
-                createField : ['content']
-            },
-            content : {
-                type : 'string',
-                required : true,
-                min : 3,
-                max : 255
-            },
-            createDate : {
-                type : 'date',
-                required : true
-            }   
+            parentDocumentId : {
+                type : ['empty', 'string']
+            }  
         }
     }
 ]
