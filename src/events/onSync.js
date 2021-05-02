@@ -37,8 +37,8 @@ async function listener(data)
                     results : entry
                 }
             });
-            item.recieverCount  += 1;
         }
+        item.recieverCount  += 1;
     })
 
     return true;
