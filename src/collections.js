@@ -38,7 +38,8 @@ export default [
         collectionName : 'entry_offers',
         fields : [
             'entryId',
-            'recieverCount'
+            'recieverCount',
+            'destroyRecieveCount'
         ],
         ref : 'entryOfferId',
         schema : {
@@ -49,6 +50,11 @@ export default [
                 createField : ['entryId']
             },
             recieverCount : {
+                type : 'number',
+                max : 255,
+                min : 1
+            },
+            destroyRecieveCount : {
                 type : 'number',
                 max : 255,
                 min : 1

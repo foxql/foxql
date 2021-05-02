@@ -224,6 +224,8 @@ class foxql {
             const peerResults = data.results || [];
             const sender = data._by || false;
 
+            console.log(peerResults)
+
             if( Object.prototype.toString.call( peerResults ) !== '[object Array]'){
                 eventConsensus.add(peerResults, sender);
                 eventConsensus.participantsCount += 1;
