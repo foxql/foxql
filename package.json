@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@foxql/foxql-index": "^1.0.19",
-    "@foxql/foxql-peer": "^1.1.2",
+    "@foxql/foxql-peer": "^1.1.3",
     "hash.js": "^1.1.7"
   },
   "devDependencies": {
