@@ -33,5 +33,26 @@ export default [
                 type : ['empty', 'string']
             }  
         }
+    },
+    {
+        collectionName : 'entry_offers',
+        fields : [
+            'entryId',
+            'recieverCount'
+        ],
+        ref : 'entryOfferId',
+        schema : {
+            entryId : {
+                type : 'string'
+            },
+            entryOfferId : {
+                createField : ['entryId']
+            },
+            recieverCount : {
+                type : 'number',
+                max : 255,
+                min : 1
+            }
+        }
     }
 ]
