@@ -223,7 +223,6 @@ class foxql {
         this.peer.onPeer(eventListenerName, async (data)=> {
             const peerResults = data.results || [];
             const sender = data._by || false;
-
             if( Object.prototype.toString.call( peerResults ) !== '[object Array]'){
                 eventConsensus.add(peerResults, sender);
                 eventConsensus.participantsCount += 1;

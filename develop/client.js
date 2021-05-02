@@ -6,7 +6,8 @@ client.listenEvents([
     'onDocument',
     'onSearch',
     'onRandom',
-    'onDocumentByRef'
+    'onDocumentByRef',
+    'onSync'
 ])
 
 client.peer.use('socketOptions', {
