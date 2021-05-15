@@ -1,5 +1,7 @@
 const name = 'onSync';
 
+let recieverCache = {};
+
 
 async function listener(data)
 {
@@ -24,7 +26,17 @@ async function listener(data)
     );
 
     offeredEntrys.forEach(item => {
-        let entry = entrysCollection.getDoc(item.entryId)
+        const entryId = item.entryId;
+
+        const foundedRecieverCache = recieverCache[entryId] || false;
+
+        if(foundedRecieverCache) {
+            if(foundedRecieverCache[by] !== undefined) {
+                return false;
+            }
+        }
+
+        let entry = entrysCollection.getDoc(entryId)
         if(entry) {
             if(item.recieverCount >= item.destroyRecieveCount ) {
                 offeredEntrysCollection.deleteDoc(item.entryOfferId)
@@ -37,6 +49,12 @@ async function listener(data)
                     results : entry
                 }
             });
+
+            if(recieverCache[entryId] == undefined) {
+                recieverCache[entryId] = {};
+            }
+
+            recieverCache[entryId][by] = 1;
         }
         item.recieverCount  += 1;
     })
