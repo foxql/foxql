@@ -1,4 +1,4 @@
-const name = 'onSync';
+const name = 'onOfferedDocuments';
 
 let recieverCache = {};
 
