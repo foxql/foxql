@@ -222,9 +222,16 @@ class foxql {
 
         this.peer.onPeer(eventListenerName, async (data)=> {
             const peerResults = data.results || [];
+
             const sender = data._by || false;
+
+            const senderPackage = {
+                sender : data._by,
+                ... data._peerInformation 
+            };
+
             if( Object.prototype.toString.call( peerResults ) !== '[object Array]'){
-                eventConsensus.add(peerResults, sender);
+                eventConsensus.add(peerResults, senderPackage);
                 eventConsensus.participantsCount += 1;
                 return;
             }
@@ -235,7 +242,7 @@ class foxql {
             eventConsensus.participantsCount += 1;
 
             peerResults.forEach(document => {
-                eventConsensus.add(document, sender);
+                eventConsensus.add(document, senderPackage);
             });
         })
 
