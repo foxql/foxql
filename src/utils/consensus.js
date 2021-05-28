@@ -13,8 +13,9 @@ class consensus {
         this.percentParticipants = 0;
     }
 
-    add(document, sender)
+    add(document, senderPackage)
     {
+        const senderId = senderPackage.sender;
         const key = this.makeKey(document)
     
         if(this.check(key)){
@@ -27,13 +28,13 @@ class consensus {
                 senderMap : {}
             }
 
-            this.hashMap[key].senderMap[sender] = 1;
+            this.hashMap[key].senderMap[senderId] = senderPackage;
 
             this.uniqueDocumentCount ++
             return true
         }
 
-        this.up(key, sender)
+        this.up(key, senderId)
     }
 
 
