@@ -214,7 +214,10 @@ class foxql {
 
         if(Object.prototype.toString.call( documentPool ) === '[object Array]') {     
             documentPool.forEach(document => {
-                eventConsensus.add(document, this.peer.peerInformation);
+                eventConsensus.add(document, {
+                    ...this.peer.peerInformation,
+                    sender : this.peer.myPeerId
+                });
             });
             eventConsensus.participantsCount += 1;
         }
