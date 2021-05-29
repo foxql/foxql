@@ -76,7 +76,6 @@ class foxql {
         }
 
         this.peer.open();
-
     }
 
     deleteDatabaseLoop()
@@ -213,9 +212,12 @@ class foxql {
             data : event
         });
 
-        if(Object.prototype.toString.call( documentPool ) === '[object Array]') {      
+        if(Object.prototype.toString.call( documentPool ) === '[object Array]') {     
             documentPool.forEach(document => {
-                eventConsensus.add(document, this.peer.myPeerId);
+                eventConsensus.add(document, {
+                    ...this.peer.peerInformation,
+                    sender : this.peer.myPeerId
+                });
             });
             eventConsensus.participantsCount += 1;
         }
