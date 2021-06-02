@@ -3,7 +3,7 @@ import peer from "@foxql/foxql-peer"
 import storage from "./utils/storage.js";
 import events from './events.js';
 import tokenization from './utils/tokenization.js';
-import consensus from './utils/consensus.js';
+import consensus from './utils/consensus';
 import nativeCollections from './collections.js';
 
 

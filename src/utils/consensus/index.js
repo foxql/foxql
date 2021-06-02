@@ -1,4 +1,7 @@
 import hash from 'hash.js'
+import {
+    senderPackageControl
+} from './methods'
 
 class consensus {
 
@@ -13,8 +16,15 @@ class consensus {
         this.percentParticipants = 0;
     }
 
+
     add(document, senderPackage)
     {
+
+        const controlSender = senderPackageControl(senderPackage);
+        if(!controlSender) {
+            return false;
+        }
+
         const senderId = senderPackage.sender;
         const key = this.makeKey(document)
     
@@ -28,7 +38,10 @@ class consensus {
                 senderMap : {}
             }
 
-            this.hashMap[key].senderMap[senderId] = senderPackage;
+            this.hashMap[key].senderMap[senderId] = {
+                information : senderPackage,
+                recieveCount : 1
+            };
 
             this.uniqueDocumentCount ++
             return true
@@ -46,10 +59,10 @@ class consensus {
         target.recievePoolingTime = time.getTime() - target.genesisRecieveTime.getTime()
 
         if(target.senderMap[sender] === undefined) {
-            target.senderMap[sender] = 1;
+            target.senderMap[sender].recieveCount = 1;
             target.senderCount++;
         }else{
-            target.senderMap[sender] ++;
+            target.senderMap[sender].recieveCount ++;
         }
 
     }
