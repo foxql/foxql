@@ -27,7 +27,7 @@ class consensus {
 
         const senderId = senderPackage.sender;
         const key = this.makeKey(document)
-    
+        
         if(this.check(key)){
             this.hashMap[key] = {
                 doc : document,
@@ -38,16 +38,31 @@ class consensus {
                 senderMap : {}
             }
 
+            this.pushSender(key, senderPackage)
+
+            this.uniqueDocumentCount ++
+
+            return true
+        }
+
+        this.pushSender(key, senderPackage)
+
+        this.up(key, senderId)
+    }
+
+    pushSender(key, senderPackage)
+    {
+        const senderId = senderPackage.sender;
+        if(this.hashMap[key].senderMap[senderId] === undefined) {
             this.hashMap[key].senderMap[senderId] = {
                 information : senderPackage,
                 recieveCount : 1
             };
-
-            this.uniqueDocumentCount ++
-            return true
+            return true;
         }
 
-        this.up(key, senderId)
+        this.hashMap[key].senderMap[senderId].recieveCount++;
+
     }
 
 
@@ -57,20 +72,14 @@ class consensus {
         target.count+=1
         const time = new Date();
         target.recievePoolingTime = time.getTime() - target.genesisRecieveTime.getTime()
-
-        if(target.senderMap[sender] === undefined) {
-            target.senderMap[sender].recieveCount = 1;
-            target.senderCount++;
-        }else{
-            target.senderMap[sender].recieveCount ++;
-        }
+        target.senderCount++;
 
     }
 
 
     check(key)
     {
-        return this.hashMap[key] === undefined
+        return this.hashMap[key] == undefined
     }
 
     makeKey(document)
