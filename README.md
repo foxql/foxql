@@ -1,24 +1,23 @@
-# Welcome the FoxQL core!
+![David](https://img.shields.io/david/dev/foxql/foxql?style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io/github/stars/foxql/foxql?style=for-the-badge)
+![npm](https://img.shields.io/npm/dt/foxql?style=for-the-badge)
+# FoxQL
 
-FoxQL never has scalability issues. It always works cheaply and fast. 
+FoxQL is a P2P library for social network
 
-Just visit any foxql project to become a node.
+## Installation
 
-[Litepaper(TR)](https://github.com/foxql/foxql/wiki/LitePaper-(TR))
-[Litepaper(EN)](https://github.com/foxql/foxql/wiki/LitePaper-(EN))
+```
+npm install foxql
+```
 
-## FoxQL Token(FQL)
-We created FoxQL Token (FQL) so that you can use it within the ecosystem we aim to create. To get tokens, you just need to use FoxQL.
-[Tronscan](https://tronscan.org/#/token20/TTFcDVvQwEhDsPRjsebDZNNw7BA1mZHBu2 "Tronscan")
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Supporting
 
 If you would like to help me develop the project full time, you can visit my patreon page. FoxQL is not for profit.
 [Patreon](https://www.patreon.com/foxql "Patreon")
 
-## Community
-[Telegram](https://t.me/foxql "Telegram")
-
-### Examples
-
-[P2P Realtime Chat Example](https://codepen.io/foxql/pen/jOyVLXp "P2P Realtime Chat Example")
+## License
+[APACHE](https://choosealicense.com/licenses/apache-2.0/)
