@@ -18,7 +18,7 @@ export default [
             content : {
                 type : 'string',
                 min : 1,
-                max : 500
+                max : 2000
             },
             documentId : {
                 createField : ['title', 'content', 'parentDocumentId']
