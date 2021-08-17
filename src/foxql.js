@@ -94,25 +94,6 @@ class foxql {
         }
     }
 
-    indexDatabaseLoop()
-    {
-        setInterval(()=>{
-
-            this.currentCollections.forEach(collection => {
-                const targetCollection = this.database.collections[collection];
-                if(targetCollection.waitingSave && !this.databaseSaveProcessing){
-                    this.databaseSaveProcessing = true;
-    
-                    const dump = this.database.export();
-                    this.storage.set(dump);
-    
-                    this.databaseSaveProcessing = false;
-                    targetCollection.waitingSave = false;
-                }  
-            })
-        }, this.storageOptions.interval);
-    }
-
 
     listenEvents(list)
     {
