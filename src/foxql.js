@@ -77,23 +77,6 @@ class foxql {
         }, options.interval);
     }
 
-    loadDumpOnStorage()
-    {
-        const dump = this.storage.get();
-        if(dump && typeof dump === 'string') {
-            this.database.import(
-                dump
-            )
-
-            nativeCollections.forEach(collection => {
-                const collectionName = collection.collectionName;
-                this.database.useCollection(collectionName).registerAnalyzer('tokenizer', tokenization);
-            })
-
-            return true;
-        }
-    }
-
 
     listenEvents(list)
     {
