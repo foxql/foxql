@@ -59,25 +59,6 @@ class foxql {
         this.peer.open();
     }
 
-    deleteDatabaseLoop()
-    {
-        const options = this.documentLengthInterval;
-
-        setInterval(()=>{
-            options.maxDocumentsInCollections.forEach(collectionOptions => {
-                const targetCollection = collectionOptions.collection;
-                const targetLength = collectionOptions.maxDocument;
-                
-                const collection = this.database.useCollection(targetCollection);
-                if(collection.documentLength > targetLength) {
-                    const lastDocumentRef = Object.keys(collection.documents).pop();
-                    collection.deleteDoc(lastDocumentRef);
-                }
-            });
-        }, options.interval);
-    }
-
-
     listenEvents(list)
     {
         list.forEach( name => {
