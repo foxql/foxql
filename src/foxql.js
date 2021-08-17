@@ -56,25 +56,6 @@ class foxql {
 
     open()
     {
-        const saveInterval = this.storageOptions.saveInterval || false;
-
-        if(saveInterval) {
-            this.storage = new storage(
-                this.storageOptions
-            );
-
-            this.loadDumpOnStorage();
-        }
-
-
-        if(saveInterval) {
-            this.indexDatabaseLoop();
-        }
-        
-        if(this.documentLengthInterval.active) {
-            this.deleteDatabaseLoop();
-        }
-
         this.peer.open();
     }
 
