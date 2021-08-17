@@ -43,17 +43,6 @@ class foxql {
         }
     }
 
-    openNativeCollections()
-    {
-        nativeCollections.forEach(collection => {
-            this.database.pushCollection(collection);
-            const collectionName = collection.collectionName;
-            this.currentCollections.push(collectionName);
-
-            this.database.useCollection(collectionName).registerAnalyzer('tokenizer', tokenization);
-        })
-    }
-
     open()
     {
         this.peer.open();
