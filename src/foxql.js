@@ -1,12 +1,14 @@
-import peer from "@foxql/foxql-peer"
+import peer from "@foxql/foxql-peer";
 import events from './events.js';
 import consensus from './utils/consensus';
 
 
 class foxql {
     constructor(){
+
         this.databaseInstance = null;
         this.peer = new peer();
+        
     }
 
     use(name, values)
