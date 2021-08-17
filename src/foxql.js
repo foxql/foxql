@@ -12,7 +12,7 @@ class foxql {
     
         this.storageOptions = {
             name : 'foxql-storage',
-            interval : 100,
+            interval : 250,
             saveInterval : false 
         }
 
@@ -20,7 +20,7 @@ class foxql {
         
         this.documentLengthInterval = {
             active : false,
-            ms : 500,
+            ms : 400,
             maxDocumentLength : 100
         };
     
@@ -100,47 +100,16 @@ class foxql {
     {
         const dump = this.storage.get();
         if(dump && typeof dump === 'string') {
-            try {
-                
-                /** TODO - DAHA SONRA BU ALAN KALDIRILACAK. */
+            this.database.import(
+                dump
+            )
 
-                const jsonObject = JSON.parse(dump);
-                for(let collectionName in jsonObject) {
+            nativeCollections.forEach(collection => {
+                const collectionName = collection.collectionName;
+                this.database.useCollection(collectionName).registerAnalyzer('tokenizer', tokenization);
+            })
 
-                    if(this.currentCollections.includes(collectionName)) {
-                        
-                        const parseDumpDocuments = Object.values(JSON.parse(jsonObject[collectionName]).documents);
-
-                        const targetCollection = this.database.useCollection(collectionName);
-
-                        parseDumpDocuments.forEach(doc => {
-                            doc.parentDocumentId = null;
-                            targetCollection.addDoc(doc);
-                        })
-
-                    }
-
-                }
-
-                nativeCollections.forEach(collection => {
-                    const collectionName = collection.collectionName;
-                    this.database.useCollection(collectionName).registerAnalyzer('tokenizer', tokenization);
-                })
-
-                return true;
-            }catch(e) // dedected new version database dump string.
-            {
-                this.database.import(
-                    dump
-                )
-
-                nativeCollections.forEach(collection => {
-                    const collectionName = collection.collectionName;
-                    this.database.useCollection(collectionName).registerAnalyzer('tokenizer', tokenization);
-                })
-
-                return true;
-            }
+            return true;
         }
     }
 
