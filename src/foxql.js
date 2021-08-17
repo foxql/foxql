@@ -1,38 +1,11 @@
-import foxqlIndex from "@foxql/foxql-index"
 import peer from "@foxql/foxql-peer"
-import storage from "./utils/storage.js";
 import events from './events.js';
-import tokenization from './utils/tokenization.js';
 import consensus from './utils/consensus';
-import nativeCollections from './collections.js';
 
 
 class foxql {
     constructor(){
-    
-        this.storageOptions = {
-            name : 'foxql-storage',
-            interval : 250,
-            saveInterval : false 
-        }
-
-        this.currentCollections = [];
-        
-        this.documentLengthInterval = {
-            active : false,
-            ms : 400,
-            maxDocumentLength : 100
-        };
-    
-        this.useAvaliableObjects = [
-            'serverOptions',
-            'storageOptions',
-            'documentLengthInterval'
-        ]
-    
-        this.databaseSaveProcessing = false
-
-        this.database = new foxqlIndex(); 
+        this.databaseInstance = null;
         this.peer = new peer();
     }
 
