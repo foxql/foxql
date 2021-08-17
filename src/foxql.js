@@ -1,5 +1,4 @@
 import peer from "@foxql/foxql-peer";
-import events from './events.js';
 import consensus from './utils/consensus';
 
 
@@ -8,7 +7,7 @@ class foxql {
 
         this.databaseInstance = null;
         this.peer = new peer();
-        
+
     }
 
     use(name, values)
@@ -21,16 +20,6 @@ class foxql {
     open()
     {
         this.peer.open();
-    }
-
-    listenEvents(list)
-    {
-        list.forEach( name => {
-            const eventListener = events[name] || false;
-            if(eventListener){
-                this.peer.onPeer(eventListener.name, eventListener.listener.bind(this));
-            }
-        });     
     }
 
     pushEvent({name, listener})
