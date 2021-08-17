@@ -129,21 +129,6 @@ class foxql {
         this.peer.onPeer(name, listener.bind(this));
     }
 
-
-    async publishDocument(document, collection)
-    {
-        if(typeof collection !== 'string') return false;
-        if(!this.currentCollections.includes(collection)) return false;
-
-        await this.peer.broadcast({
-            listener : 'onDocument',
-            data : {
-                document : document,
-                collection : collection
-            }
-        });
-    }   
-
     randomString()
     {
         return Math.random().toString(36).substring(0,30).replace(/\./gi, '');
