@@ -20,6 +20,11 @@ class foxql {
         this.peer.onPeer(name, listener.bind(this));
     }
 
+    useDbInstance(instance)
+    {
+        this.databaseInstance = instance;
+    }
+
     randomString()
     {
         return Math.random().toString(36).substring(0,30).replace(/\./gi, '');
