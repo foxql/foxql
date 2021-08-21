@@ -18,5 +18,12 @@ client.open();
 
 Change signaling server
 ```javascript
+const client = new foxql();
+
+client.peer.use('socketOptions', {
+    host : 'foxql-signal.herokuapp.com',
+    port : null,
+    protocol : 'https'
+});
 
 ```
