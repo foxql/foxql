@@ -77,3 +77,74 @@ client.useDbInstance(database);
 clent.open();
 
 ```
+
+## Events
+Example event listener module helloWorldEvent.js
+```javascript
+const eventListenerName = 'helloWorld';
+
+async function listener(data)
+{ 
+    const sender = data._by; // emitter peer id
+    const simulateStatus = data._simulated;
+
+    if(simulateStatus) { // checking data for webRTC connection
+        return true;
+    }
+
+
+    this.peer.send(by, {
+        listener : data.listener, // emitter waiting. Answer this listener name
+        data :{
+            message : "Hello!",
+        }
+    });
+}
+
+export default {
+    name : eventListenerName,
+    listener : listener
+}
+```
+
+### Listen event
+```javascript
+import { foxql } from 'foxql';
+import helloWorld from './helloWorldEvent.js';
+
+const client = new foxql();
+
+client.pushEvent(helloWorld);
+
+client.open();
+```
+
+### Send data to listener
+```javascript
+import { foxql } from 'foxql';
+import helloWorld from './helloWorldEvent.js';
+
+const client = new foxql();
+
+client.pushEvent(helloWorld);
+
+client.open();
+
+async function query() {
+
+    const queryObject = {
+        data: 'Hello!'
+    };
+
+    const results = await client.sendEvent(queryObject, {
+        timeOut : 1200, // destroy 1.2s listener
+        peerListener : 'helloWorld'
+    });
+
+    return results;
+}
+
+query();
+
+
+```
