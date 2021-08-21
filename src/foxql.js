@@ -10,13 +10,6 @@ class foxql {
 
     }
 
-    use(name, values)
-    {
-        if(this.useAvaliableObjects.includes(name)){
-            this[name] = {...this[name], ...values}
-        }
-    }
-
     open()
     {
         this.peer.open();
