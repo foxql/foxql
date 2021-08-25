@@ -18,7 +18,6 @@ function fieldCheck(obj)
         const dataType = typeof(value);
 
         if( !( dataType === 'string' || value === null ) ){
-            console.log('ım')
             return false;
         }
 
