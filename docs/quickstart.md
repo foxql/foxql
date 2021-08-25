@@ -31,7 +31,7 @@ client.open();
 ```
 
 ## Database
-Injecting any database
+Install any database
 
 ```bash
 npm i @foxql/foxql-index
@@ -39,9 +39,7 @@ npm i @foxql/foxql-index
 
 Preparing database instance
 ```javascript
-import { foxql } from 'foxql';
 import foxqlIndex from "@foxql/foxql-index";
-const client = new foxql();
 const database = new foxqlIndex();
 
 database.pushCollection({
@@ -72,10 +70,12 @@ database.useCollection('entrys').registerAnalyzer('tokenizer', (string)=>{
     return string.toLowerCase().replace(/  +/g, ' ').trim();
 }); 
 
+```
+Injecting database instance
+
+```javascript
 client.useDbInstance(database);
-
-clent.open();
-
+clent.open(); 
 ```
 
 ## Events
