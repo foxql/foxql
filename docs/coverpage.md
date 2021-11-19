@@ -4,3 +4,4 @@
 
 [Get Started](quickstart)
 [GitHub](https://github.com/foxql)
+[Discord](https://discord.gg/9jK5xmn4Vw)
